@@ -46,6 +46,15 @@ def main():
 
         # Print segment boundaries relative to the video timeline
         print("Segment boundaries (seconds):", seg_times)
+        print(f"Found {len(peaks)} segment boundaries")
+        
+        # Also save results to file
+        with open('segment_boundaries.txt', 'w') as f:
+            f.write(f"Found {len(peaks)} segment boundaries\n")
+            f.write(f"Times (seconds): {list(seg_times)}\n")
+            for i, t in enumerate(seg_times):
+                f.write(f"Boundary {i+1}: {t:.2f}s\n")
+        print("Results saved to segment_boundaries.txt")
 
 
 

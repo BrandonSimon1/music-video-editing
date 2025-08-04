@@ -10,5 +10,6 @@ dependencies = [
     "matplotlib>=3.10.3",
     "moviepy>=2.2.1",
     "numpy>=2.2.6",
+    "psutil>=7.0.0",
     "soundfile>=0.13.1",
 ]

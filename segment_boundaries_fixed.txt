@@ -1,0 +1,7 @@
+Video segmentation results
+Total boundaries: 4
+
+Boundary 1: 755.04s (12.58m)
+Boundary 2: 3585.12s (59.75m)
+Boundary 3: 3594.06s (59.90m)
+Boundary 4: 5676.35s (94.61m)
