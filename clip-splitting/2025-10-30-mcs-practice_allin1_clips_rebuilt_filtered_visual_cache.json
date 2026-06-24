@@ -1,0 +1,1399 @@
+{
+  "5": {
+    "clip_id": 5,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A bassist in the center is actively playing while wearing headphones during what appears to be a band practice or jam session."
+    ],
+    "error": false
+  },
+  "4": {
+    "clip_id": 4,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A woman in the center is actively playing a flute while other band members play guitars, drums, and bass around her."
+    ],
+    "error": false
+  },
+  "6": {
+    "clip_id": 6,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively playing their instruments\u2014bass, flute, and drums."
+    ],
+    "error": false
+  },
+  "8": {
+    "clip_id": 8,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing together, with musicians playing bass, drums, and other instruments in what appears to be a practice or jam session."
+    ],
+    "error": false
+  },
+  "7": {
+    "clip_id": 7,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing, with members playing guitars, bass, and drums while singing."
+    ],
+    "error": false
+  },
+  "2": {
+    "clip_id": 2,
+    "is_playing": false,
+    "votes": [
+      false
+    ],
+    "responses": [
+      "NO. The musicians are positioned with their instruments but do not appear to be actively playing at this moment\u2014they seem to be either setting up or posing for a photo."
+    ],
+    "error": false
+  },
+  "3": {
+    "clip_id": 3,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A musician in the center is actively playing a flute while bandmates hold guitars and drums around them in what appears to be an active jam session."
+    ],
+    "error": false
+  },
+  "9": {
+    "clip_id": 9,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple people are playing instruments together in what appears to be a band practice or recording session."
+    ],
+    "error": false
+  },
+  "10": {
+    "clip_id": 10,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A person in the center is actively playing a violin with a bow."
+    ],
+    "error": false
+  },
+  "1": {
+    "clip_id": 1,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES\n\nThe musicians are positioned with their instruments (bass, drums) as if actively playing or in an active jam session."
+    ],
+    "error": false
+  },
+  "11": {
+    "clip_id": 11,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Several band members are holding instruments in playing position, with one person actively playing a brass instrument while wearing headphones."
+    ],
+    "error": false
+  },
+  "14": {
+    "clip_id": 14,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively engaged in playing together, with musicians on bass, violin, drums, and other instruments."
+    ],
+    "error": false
+  },
+  "12": {
+    "clip_id": 12,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing together with guitar, drums, and other instruments in what appears to be a practice space."
+    ],
+    "error": false
+  },
+  "13": {
+    "clip_id": 13,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are positioned with their instruments in active playing posture during what appears to be a practice or rehearsal session."
+    ],
+    "error": false
+  },
+  "16": {
+    "clip_id": 16,
+    "is_playing": false,
+    "votes": [
+      false
+    ],
+    "responses": [
+      "NO. The band members are holding their instruments but appear to be paused or posing for a photo rather than actively playing."
+    ],
+    "error": false
+  },
+  "15": {
+    "clip_id": 15,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band of musicians is actively playing instruments together in what appears to be a practice or jam session."
+    ],
+    "error": false
+  },
+  "17": {
+    "clip_id": 17,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing together in a garage studio, with musicians playing guitar, bass, violin, drums, and vocals."
+    ],
+    "error": false
+  },
+  "20": {
+    "clip_id": 20,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A person in the center is actively playing a violin while wearing headphones, with band members and instruments visible around the practice space."
+    ],
+    "error": false
+  },
+  "18": {
+    "clip_id": 18,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES\n\nMultiple band members are actively holding and playing guitars during what appears to be a practice or jam session."
+    ],
+    "error": false
+  },
+  "22": {
+    "clip_id": 22,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. People are actively playing guitars and drums in what appears to be a band practice or jam session."
+    ],
+    "error": false
+  },
+  "19": {
+    "clip_id": 19,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively playing their instruments during what appears to be a live rehearsal or jam session in a garage studio."
+    ],
+    "error": false
+  },
+  "21": {
+    "clip_id": 21,
+    "is_playing": false,
+    "votes": [
+      false
+    ],
+    "responses": [
+      "NO. The musicians appear to be positioned with their instruments but paused, with the vocalist listening to headphones and the drummer seated but not actively striking the drums."
+    ],
+    "error": false
+  },
+  "23": {
+    "clip_id": 23,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. People are actively engaged in playing guitar and drums while someone sings into a microphone."
+    ],
+    "error": false
+  },
+  "24": {
+    "clip_id": 24,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively playing instruments together in what appears to be a practice or recording session, with the bassist in focus wearing headphones."
+    ],
+    "error": false
+  },
+  "26": {
+    "clip_id": 26,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The person in the center is actively playing a bass guitar while another person in the maroon shirt is playing what appears to be a flute or wind instrument."
+    ],
+    "error": false
+  },
+  "27": {
+    "clip_id": 27,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple musicians are actively performing\u2014a flute player in the center, a drummer on the right, and other band members with instruments."
+    ],
+    "error": false
+  },
+  "25": {
+    "clip_id": 25,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The person in the center is actively playing a violin, and there appears to be a drummer seated in the background."
+    ],
+    "error": false
+  },
+  "28": {
+    "clip_id": 28,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively jamming together in a home studio or practice space, with musicians on bass, guitar, and drums."
+    ],
+    "error": false
+  },
+  "30": {
+    "clip_id": 30,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing, with musicians playing guitar, violin, and drums in what appears to be a home studio setup."
+    ],
+    "error": false
+  },
+  "32": {
+    "clip_id": 32,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are actively playing their instruments, with a guitarist and drummer clearly engaged in playing."
+    ],
+    "error": false
+  },
+  "29": {
+    "clip_id": 29,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band appears to be actively rehearsing, with guitar and drums being played."
+    ],
+    "error": false
+  },
+  "31": {
+    "clip_id": 31,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The drummer on the right and guitarist in the center appear to be actively playing their instruments during a band practice."
+    ],
+    "error": false
+  },
+  "33": {
+    "clip_id": 33,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing together with guitar, bass, drums, and vocals in what appears to be a home studio space."
+    ],
+    "error": false
+  },
+  "34": {
+    "clip_id": 34,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A violinist in a maroon shirt and a drummer are actively performing together in this home studio setup."
+    ],
+    "error": false
+  },
+  "36": {
+    "clip_id": 36,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing together with guitars, bass, drums, and vocals in a practice or recording session."
+    ],
+    "error": false
+  },
+  "37": {
+    "clip_id": 37,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band appears to be actively jamming together in a practice space, with members playing bass guitar, drums, and vocals."
+    ],
+    "error": false
+  },
+  "38": {
+    "clip_id": 38,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are actively positioned at their instruments with the drummer playing, singer at the microphone, and guitarists engaged in an active practice or performance session."
+    ],
+    "error": false
+  },
+  "39": {
+    "clip_id": 39,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing together with guitars, bass, and drums in what appears to be a practice space."
+    ],
+    "error": false
+  },
+  "40": {
+    "clip_id": 40,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Three band members are actively rehearsing or performing together in what appears to be a home studio setup."
+    ],
+    "error": false
+  },
+  "42": {
+    "clip_id": 42,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively practicing together with violin, guitar, drums, and other instruments in what appears to be a basement studio."
+    ],
+    "error": false
+  },
+  "35": {
+    "clip_id": 35,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are positioned with their instruments in a practice/rehearsal setting with active engaged postures."
+    ],
+    "error": false
+  },
+  "41": {
+    "clip_id": 41,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. At least one band member is actively playing an instrument (the flute/wind player in the center-right appears to be playing), with others in active playing positions."
+    ],
+    "error": false
+  },
+  "43": {
+    "clip_id": 43,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple musicians are actively performing together\u2014the person in burgundy is playing a wind instrument while others engage with guitar and drums."
+    ],
+    "error": false
+  },
+  "44": {
+    "clip_id": 44,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A group of musicians are actively playing together in what appears to be a band practice or rehearsal session, with instruments including guitars, bass, violin, and drums."
+    ],
+    "error": false
+  },
+  "45": {
+    "clip_id": 45,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A violinist in the center is actively playing while other band members hold their instruments in readiness."
+    ],
+    "error": false
+  },
+  "46": {
+    "clip_id": 46,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The person in the maroon shirt is actively playing a flute/wind instrument with it raised to their mouth."
+    ],
+    "error": false
+  },
+  "47": {
+    "clip_id": 47,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively engaged in playing their instruments together in what appears to be a practice or jam session."
+    ],
+    "error": false
+  },
+  "48": {
+    "clip_id": 48,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple musicians are actively engaged in playing a jam session together, with flute, bass, drums, and guitar visible."
+    ],
+    "error": false
+  },
+  "49": {
+    "clip_id": 49,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively playing guitar, bass, drums, and keyboard together in this home studio setup."
+    ],
+    "error": false
+  },
+  "51": {
+    "clip_id": 51,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Three musicians are actively engaged in a jam session with acoustic guitar, electric guitar, and drums."
+    ],
+    "error": false
+  },
+  "50": {
+    "clip_id": 50,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are actively rehearsing or jamming, with the bassist and drummer engaged in playing."
+    ],
+    "error": false
+  },
+  "52": {
+    "clip_id": 52,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively jamming together in what appears to be a basement practice space, with members on guitar, bass, and drums engaged in playing."
+    ],
+    "error": false
+  },
+  "53": {
+    "clip_id": 53,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Five musicians are actively playing together\u2014guitar, bass, flute, drums, and another instrument\u2014in what appears to be a band rehearsal or jam session."
+    ],
+    "error": false
+  },
+  "55": {
+    "clip_id": 55,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing together, with visible guitar, bass, vocals, and drums in what appears to be a practice or recording session."
+    ],
+    "error": false
+  },
+  "54": {
+    "clip_id": 54,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple musicians are actively playing guitars/bass and singing together in this practice room session."
+    ],
+    "error": false
+  },
+  "56": {
+    "clip_id": 56,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing or practicing, with members holding and playing bass guitar, violin, and drums."
+    ],
+    "error": false
+  },
+  "57": {
+    "clip_id": 57,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The person in the center is actively playing bass guitar while the person in red is playing a stringed instrument, likely violin or fiddle."
+    ],
+    "error": false
+  },
+  "58": {
+    "clip_id": 58,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A group of musicians are actively playing together, with visible instruments including guitar, violin/fiddle, and drums."
+    ],
+    "error": false
+  },
+  "59": {
+    "clip_id": 59,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing together with electric guitar, bass, drums, and vocals in what appears to be a home studio or garage space."
+    ],
+    "error": false
+  },
+  "60": {
+    "clip_id": 60,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are actively playing their instruments together in a practice or performance session."
+    ],
+    "error": false
+  },
+  "61": {
+    "clip_id": 61,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band of four musicians is actively practicing together in what appears to be a home studio setup."
+    ],
+    "error": false
+  },
+  "62": {
+    "clip_id": 62,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively performing with guitars, bass, drums, and what appears to be a flute or woodwind instrument."
+    ],
+    "error": false
+  },
+  "64": {
+    "clip_id": 64,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing together, with musicians playing saxophone, bass, drums, and other instruments in a rehearsal space."
+    ],
+    "error": false
+  },
+  "63": {
+    "clip_id": 63,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The musicians appear to be actively engaged in playing or rehearsing together as a band, with the guitarist in the center in an active playing position."
+    ],
+    "error": false
+  },
+  "65": {
+    "clip_id": 65,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively playing their instruments together in what appears to be a rehearsal or jam session in a home studio setup."
+    ],
+    "error": false
+  },
+  "66": {
+    "clip_id": 66,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The person with headphones is actively holding and playing a bass guitar, with a drummer positioned at the kit in what appears to be an ongoing jam session."
+    ],
+    "error": false
+  },
+  "68": {
+    "clip_id": 68,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing together with guitar, saxophone, and drums in what appears to be a practice space."
+    ],
+    "error": false
+  },
+  "67": {
+    "clip_id": 67,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band appears to be actively practicing together, with musicians holding bass and singing into microphones in what looks like a garage jam session."
+    ],
+    "error": false
+  },
+  "69": {
+    "clip_id": 69,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band appears to be actively jamming together with guitar, drums, and other instruments in a practice space."
+    ],
+    "error": false
+  },
+  "71": {
+    "clip_id": 71,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively jamming together in what appears to be a practice space, with members playing bass, guitar, and drums."
+    ],
+    "error": false
+  },
+  "70": {
+    "clip_id": 70,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively playing guitars together in a practice session."
+    ],
+    "error": false
+  },
+  "72": {
+    "clip_id": 72,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing together in a garage or practice space."
+    ],
+    "error": false
+  },
+  "73": {
+    "clip_id": 73,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively playing instruments including guitar, drums, and bass in what appears to be a jam session or rehearsal."
+    ],
+    "error": false
+  },
+  "74": {
+    "clip_id": 74,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band appears to be actively rehearsing, with members playing guitar, bass, and drums in a studio space."
+    ],
+    "error": false
+  },
+  "75": {
+    "clip_id": 75,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The musicians in the center of the frame are actively playing their instruments during what appears to be a band rehearsal or practice session."
+    ],
+    "error": false
+  },
+  "76": {
+    "clip_id": 76,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members appear to be actively engaged with their instruments in what looks like a jam session or rehearsal in progress."
+    ],
+    "error": false
+  },
+  "78": {
+    "clip_id": 78,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing or jamming together, with members playing guitar, bass, and drums in a practice space."
+    ],
+    "error": false
+  },
+  "77": {
+    "clip_id": 77,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The musicians appear to be actively engaged in playing together, with the bassist and drummer in active playing positions."
+    ],
+    "error": false
+  },
+  "79": {
+    "clip_id": 79,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are actively engaged with their instruments in what appears to be a jam session or practice."
+    ],
+    "error": false
+  },
+  "80": {
+    "clip_id": 80,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band appears to be actively rehearsing together, with members on guitar, bass, wind instrument, and drums."
+    ],
+    "error": false
+  },
+  "81": {
+    "clip_id": 81,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The bass player in the center and violinist on the right are actively playing together, with proper instrument positioning and engaged postures."
+    ],
+    "error": false
+  },
+  "82": {
+    "clip_id": 82,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing, with at least the bassist visibly playing and others engaged in the performance."
+    ],
+    "error": false
+  },
+  "83": {
+    "clip_id": 83,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A bassist and drummer appear to be actively performing while others watch and listen in what looks like a band practice or jam session."
+    ],
+    "error": false
+  },
+  "84": {
+    "clip_id": 84,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A bass player is actively playing while band members appear to be rehearsing together in a studio space."
+    ],
+    "error": false
+  },
+  "86": {
+    "clip_id": 86,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The person in the center is actively holding and playing an electric guitar during what appears to be a band rehearsal or jam session."
+    ],
+    "error": false
+  },
+  "85": {
+    "clip_id": 85,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are actively engaged in playing their instruments during a practice session."
+    ],
+    "error": false
+  },
+  "88": {
+    "clip_id": 88,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Three musicians are positioned with instruments (bass guitar, electric guitar, and drums) in what appears to be an active jam session or practice."
+    ],
+    "error": false
+  },
+  "87": {
+    "clip_id": 87,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are actively engaged in a practice or recording session with instruments in hand and playing positions."
+    ],
+    "error": false
+  },
+  "89": {
+    "clip_id": 89,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively jamming together in a practice space with guitar, vocals, and drums."
+    ],
+    "error": false
+  },
+  "91": {
+    "clip_id": 91,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing together with guitar, bass, saxophone, and drums in what appears to be a practice studio."
+    ],
+    "error": false
+  },
+  "92": {
+    "clip_id": 92,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing together with guitar, bass, violin, and drums in what appears to be a practice or recording session."
+    ],
+    "error": false
+  },
+  "93": {
+    "clip_id": 93,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are positioned with instruments in playing postures, with the violinist and other musicians actively engaged in their instruments."
+    ],
+    "error": false
+  },
+  "94": {
+    "clip_id": 94,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing or practicing together in what appears to be a studio or practice space, with guitarists, a bassist, and a drummer engaged with their instruments."
+    ],
+    "error": false
+  },
+  "90": {
+    "clip_id": 90,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are positioned with their instruments in playing stance while someone records them with a boom microphone."
+    ],
+    "error": false
+  },
+  "96": {
+    "clip_id": 96,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing together with guitars, drums, and vocals in what appears to be a practice studio session."
+    ],
+    "error": false
+  },
+  "95": {
+    "clip_id": 95,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing/rehearsing with bass, vocals, drums, and other instruments in what appears to be a home studio setup."
+    ],
+    "error": false
+  },
+  "97": {
+    "clip_id": 97,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The band members are actively performing together with bass, vocals, and drums during what appears to be a practice or recording session."
+    ],
+    "error": false
+  },
+  "98": {
+    "clip_id": 98,
+    "is_playing": false,
+    "votes": [
+      false
+    ],
+    "responses": [
+      "NO. The musicians are posing with their instruments but are not actively playing\u2014they appear to be pausing for a photograph."
+    ],
+    "error": false
+  },
+  "99": {
+    "clip_id": 99,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band appears to be actively rehearsing together in a garage space with bass, drums, and guitar."
+    ],
+    "error": false
+  },
+  "100": {
+    "clip_id": 100,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band appears to be actively practicing or recording, with musicians playing bass guitar and drums while a vocalist sings."
+    ],
+    "error": false
+  },
+  "101": {
+    "clip_id": 101,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple musicians are actively performing together\u2014a violinist, guitarist, and drummer are all engaged in playing."
+    ],
+    "error": false
+  },
+  "102": {
+    "clip_id": 102,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively playing their instruments\u2014a bassist, saxophonist, and drummer are all engaged in performance."
+    ],
+    "error": false
+  },
+  "103": {
+    "clip_id": 103,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing, with members playing bass guitars and drums in what appears to be a basement studio space."
+    ],
+    "error": false
+  },
+  "104": {
+    "clip_id": 104,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively rehearsing together with bass, guitar, and drums in what appears to be a home studio."
+    ],
+    "error": false
+  },
+  "105": {
+    "clip_id": 105,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Four musicians are actively playing bass, guitar, and drums together in what appears to be a band practice or jam session."
+    ],
+    "error": false
+  },
+  "106": {
+    "clip_id": 106,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Three musicians are actively playing together in a home studio setup with bass guitar, flute, and drums."
+    ],
+    "error": false
+  },
+  "107": {
+    "clip_id": 107,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members appear to be actively performing with various instruments including flute, guitar, and drums."
+    ],
+    "error": false
+  },
+  "108": {
+    "clip_id": 108,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively jamming together, with members playing saxophone, guitar, drums, and other instruments in what appears to be a practice session."
+    ],
+    "error": false
+  },
+  "109": {
+    "clip_id": 109,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively performing together, with at least one member playing a wind instrument, a bass guitarist, and drummers engaged in the session."
+    ],
+    "error": false
+  },
+  "110": {
+    "clip_id": 110,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are positioned with instruments in playing posture, including bass and trumpet."
+    ],
+    "error": false
+  },
+  "111": {
+    "clip_id": 111,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Two musicians are actively playing\u2014one at a keyboard on the left and one at the drums on the right, with headphones visible suggesting they're monitoring audio."
+    ],
+    "error": false
+  },
+  "112": {
+    "clip_id": 112,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple musicians are actively performing with bass, violin/fiddle, and drums visible in what appears to be a band practice session."
+    ],
+    "error": false
+  },
+  "113": {
+    "clip_id": 113,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Multiple band members are actively engaged in playing instruments\u2014a saxophonist, guitarist, and others are performing together in what appears to be a practice session."
+    ],
+    "error": false
+  },
+  "114": {
+    "clip_id": 114,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A band is actively jamming in what appears to be a home studio or practice space, with at least two musicians visibly playing instruments."
+    ],
+    "error": false
+  },
+  "115": {
+    "clip_id": 115,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Four musicians are actively playing their instruments in what appears to be a band rehearsal or jam session."
+    ],
+    "error": false
+  },
+  "116": {
+    "clip_id": 116,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Three musicians are actively playing instruments\u2014bass, violin, and drums\u2014in what appears to be a band practice session."
+    ],
+    "error": false
+  },
+  "117": {
+    "clip_id": 117,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Three musicians are actively playing instruments\u2014drums, bass guitar, and another instrument\u2014in what appears to be a basement jam session."
+    ],
+    "error": false
+  },
+  "118": {
+    "clip_id": 118,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Two musicians are actively playing instruments\u2014a bassist and a drummer\u2014during what appears to be a jam session or band practice."
+    ],
+    "error": false
+  },
+  "119": {
+    "clip_id": 119,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Two musicians are actively playing bass and guitar while a drum kit is set up between them in what appears to be a band practice or recording session."
+    ],
+    "error": false
+  },
+  "120": {
+    "clip_id": 120,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. The drummer and bass player are actively engaged with their instruments in what appears to be a band practice session."
+    ],
+    "error": false
+  },
+  "121": {
+    "clip_id": 121,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A bass player and drummer are actively playing together in a home studio setup."
+    ],
+    "error": false
+  },
+  "122": {
+    "clip_id": 122,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Two musicians are actively playing together\u2014a bassist on the left and a drummer on the right."
+    ],
+    "error": false
+  },
+  "123": {
+    "clip_id": 123,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Two musicians are actively playing\u2014one on bass guitar and one on violin, with a drum kit visible nearby."
+    ],
+    "error": false
+  },
+  "125": {
+    "clip_id": 125,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. A bassist and drummer are actively playing together in a practice room."
+    ],
+    "error": false
+  },
+  "124": {
+    "clip_id": 124,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Three musicians are actively engaged in playing together, with bass guitars and drums visible in what appears to be a practice session."
+    ],
+    "error": false
+  },
+  "126": {
+    "clip_id": 126,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Both the bassist and drummer are actively engaged in playing their instruments together in what appears to be a practice session."
+    ],
+    "error": false
+  },
+  "127": {
+    "clip_id": 127,
+    "is_playing": true,
+    "votes": [
+      true
+    ],
+    "responses": [
+      "YES. Three musicians are actively performing together\u2014bass, guitar, and drums\u2014in what appears to be a practice or rehearsal session."
+    ],
+    "error": false
+  }
+}

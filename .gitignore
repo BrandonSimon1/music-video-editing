@@ -205,3 +205,22 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Large media files
+*.MOV
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Rendered clip output directories
+clip-splitting/rendered-*/
+clip-splitting/listening-test*/
+song-splitting/rendered-*/
+
+# macOS metadata
+.DS_Store
+
+# Audio clip outputs
+*.mp3
+song-splitting/clips/

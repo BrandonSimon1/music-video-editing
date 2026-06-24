@@ -1,0 +1,200 @@
+{
+  "audio_file": "testaudio.mp3",
+  "total_duration": 5904.660317460318,
+  "num_segments": 12,
+  "parameters": {
+    "window_size": 10.0,
+    "hop_size": 2.0,
+    "threshold": 0.65,
+    "min_gap_duration": 10.0,
+    "min_song_duration": 300.0,
+    "stability_window": 5.0
+  },
+  "segments": [
+    {
+      "segment_id": 1,
+      "start_time": 0.0,
+      "end_time": 309.0,
+      "duration": 309.0,
+      "percussive_energy_mean": 0.024682842195034027,
+      "onset_rate_mean": 0.2388157894736842,
+      "next_boundary": {
+        "time": 309.0,
+        "gap_score": 0.97325599193573,
+        "energy_from": 0.024682842195034027,
+        "energy_to": 0.032448071986436844,
+        "onset_rate_from": 0.2388157894736842,
+        "onset_rate_to": 1.8607594936708867
+      }
+    },
+    {
+      "segment_id": 2,
+      "start_time": 309.0,
+      "end_time": 783.0,
+      "duration": 474.0,
+      "percussive_energy_mean": 0.032448071986436844,
+      "onset_rate_mean": 1.8607594936708867,
+      "next_boundary": {
+        "time": 783.0,
+        "gap_score": 0.9767207400552158,
+        "energy_from": 0.032448071986436844,
+        "energy_to": 0.039620235562324524,
+        "onset_rate_from": 1.8607594936708867,
+        "onset_rate_to": 2.1492063492063487
+      }
+    },
+    {
+      "segment_id": 3,
+      "start_time": 783.0,
+      "end_time": 1287.0,
+      "duration": 504.0,
+      "percussive_energy_mean": 0.039620235562324524,
+      "onset_rate_mean": 2.1492063492063487,
+      "next_boundary": {
+        "time": 1287.0,
+        "gap_score": 0.9543868693812141,
+        "energy_from": 0.039620235562324524,
+        "energy_to": 0.041289348155260086,
+        "onset_rate_from": 2.1492063492063487,
+        "onset_rate_to": 2.4615969581749053
+      }
+    },
+    {
+      "segment_id": 4,
+      "start_time": 1287.0,
+      "end_time": 1813.0,
+      "duration": 526.0,
+      "percussive_energy_mean": 0.041289348155260086,
+      "onset_rate_mean": 2.4615969581749053,
+      "next_boundary": {
+        "time": 1813.0,
+        "gap_score": 0.9461806611768131,
+        "energy_from": 0.041289348155260086,
+        "energy_to": 0.043404556810855865,
+        "onset_rate_from": 2.4615969581749053,
+        "onset_rate_to": 2.5933333333333333
+      }
+    },
+    {
+      "segment_id": 5,
+      "start_time": 1813.0,
+      "end_time": 2353.0,
+      "duration": 540.0,
+      "percussive_energy_mean": 0.043404556810855865,
+      "onset_rate_mean": 2.5933333333333333,
+      "next_boundary": {
+        "time": 2353.0,
+        "gap_score": 0.9168019089205512,
+        "energy_from": 0.043404556810855865,
+        "energy_to": 0.034252673387527466,
+        "onset_rate_from": 2.5933333333333333,
+        "onset_rate_to": 1.6905956112852663
+      }
+    },
+    {
+      "segment_id": 6,
+      "start_time": 2353.0,
+      "end_time": 2991.0,
+      "duration": 638.0,
+      "percussive_energy_mean": 0.034252673387527466,
+      "onset_rate_mean": 1.6905956112852663,
+      "next_boundary": {
+        "time": 2991.0,
+        "gap_score": 0.9166216552257538,
+        "energy_from": 0.034252673387527466,
+        "energy_to": 0.0366472490131855,
+        "onset_rate_from": 1.6905956112852663,
+        "onset_rate_to": 1.9769480519480522
+      }
+    },
+    {
+      "segment_id": 7,
+      "start_time": 2991.0,
+      "end_time": 3607.0,
+      "duration": 616.0,
+      "percussive_energy_mean": 0.0366472490131855,
+      "onset_rate_mean": 1.9769480519480522,
+      "next_boundary": {
+        "time": 3607.0,
+        "gap_score": 0.945263047670496,
+        "energy_from": 0.0366472490131855,
+        "energy_to": 0.04045524075627327,
+        "onset_rate_from": 1.9769480519480522,
+        "onset_rate_to": 2.3561933534743207
+      }
+    },
+    {
+      "segment_id": 8,
+      "start_time": 3607.0,
+      "end_time": 4269.0,
+      "duration": 662.0,
+      "percussive_energy_mean": 0.04045524075627327,
+      "onset_rate_mean": 2.3561933534743207,
+      "next_boundary": {
+        "time": 4269.0,
+        "gap_score": 0.9847020702115421,
+        "energy_from": 0.04045524075627327,
+        "energy_to": 0.03796319290995598,
+        "onset_rate_from": 2.3561933534743207,
+        "onset_rate_to": 2.402873563218391
+      }
+    },
+    {
+      "segment_id": 9,
+      "start_time": 4269.0,
+      "end_time": 4617.0,
+      "duration": 348.0,
+      "percussive_energy_mean": 0.03796319290995598,
+      "onset_rate_mean": 2.402873563218391,
+      "next_boundary": {
+        "time": 4617.0,
+        "gap_score": 0.6810780506709526,
+        "energy_from": 0.03796319290995598,
+        "energy_to": 0.03760115057229996,
+        "onset_rate_from": 2.402873563218391,
+        "onset_rate_to": 2.2847736625514403
+      }
+    },
+    {
+      "segment_id": 10,
+      "start_time": 4617.0,
+      "end_time": 5103.0,
+      "duration": 486.0,
+      "percussive_energy_mean": 0.03760115057229996,
+      "onset_rate_mean": 2.2847736625514403,
+      "next_boundary": {
+        "time": 5103.0,
+        "gap_score": 0.9913793103448276,
+        "energy_from": 0.03760115057229996,
+        "energy_to": 0.030779998749494553,
+        "onset_rate_from": 2.2847736625514403,
+        "onset_rate_to": 1.020983606557377
+      }
+    },
+    {
+      "segment_id": 11,
+      "start_time": 5103.0,
+      "end_time": 5713.0,
+      "duration": 610.0,
+      "percussive_energy_mean": 0.030779998749494553,
+      "onset_rate_mean": 1.020983606557377,
+      "next_boundary": {
+        "time": 5713.0,
+        "gap_score": 0.9738943576812744,
+        "energy_from": 0.030779998749494553,
+        "energy_to": 0.019648846238851547,
+        "onset_rate_from": 1.020983606557377,
+        "onset_rate_to": 0.927659574468085
+      }
+    },
+    {
+      "segment_id": 12,
+      "start_time": 5713.0,
+      "end_time": 5904.660317460318,
+      "duration": 191.66031746031786,
+      "percussive_energy_mean": 0.019648846238851547,
+      "onset_rate_mean": 0.927659574468085,
+      "next_boundary": null
+    }
+  ]
+}
