@@ -7,6 +7,12 @@ Welcome to the music video editing project wiki. This wiki documents various mus
 - [Song Splitting](projects/song-splitting/index.md) - Automatic segmentation of concert recordings into individual songs
 - [Clip Splitting](projects/clip-splitting/index.md) - Beat-aligned extraction of short clips from music videos
 
+## Investigations
+
+Active research threads exploring new approaches:
+
+- [LLM-Augmented Audio/Video Analysis](investigations/llm-audio-video/index.md) — replacing allin1 with fast LLM-driven analysis; path to a service
+
 ## Best Practices
 
 - [Visualization for Analysis](best-practices/visualization.md) - Creating visualizations to inspect and validate analysis results
