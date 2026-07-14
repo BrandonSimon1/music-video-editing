@@ -48,31 +48,63 @@ See [failed-approaches.md](failed-approaches.md) for details.
 
 ## Files
 
-- `allin1_clip_extractor.py` — Main script (analyze, build-clips, filter, visual-filter, render subcommands)
+- `process_video.py` — **Primary entry point.** Full pipeline in one command; handles folder layout, caching, filtering, rendering
+- `algorithms/allin1.py` — allin1 algorithm plugin (analysis + clip building)
+- `algorithms/__init__.py` — Documents the plugin interface for adding new algorithms
+- `allin1_clip_extractor.py` — Low-level subcommands (analyze, build-clips, filter, visual-filter, render) used internally by the allin1 plugin
 - `rebuild_clips.py` — One-off: reconstruct downbeats from old clips JSON and re-build with new duration logic
 - `beat_clip_extractor.py` — Previous script: librosa beat-track approach (kept for reference)
-- `visualize_beats_detail.py` — Detailed beat visualization
-- `analyze_tempo_variation.py` — Tempo stability analysis
 
 ## Usage
 
+### Run the full pipeline
+
 ```bash
-# Step 1: Analyze video — saves _analysis.json (beats, downbeats, segments)
+uv run process_video.py /path/to/session-folder
+```
+
+This produces:
+```
+session-folder/
+  video.MOV
+  analysis/
+    2026-07-14-allin1.json   ← cached; reused on subsequent runs
+  clips/
+    2026-07-14-allin1/
+      clips.json             ← algorithm, params, summary, clip timings
+      _visual_cache.json     ← resume cache (internal)
+      clip-001.mp4
+      clip-002.mp4
+      ...
+```
+
+### Common options
+
+```bash
+# Skip the ~6-hour allin1 step if analysis already cached
+uv run process_video.py /path/to/folder   # automatically reuses analysis/<date>-allin1.json
+
+# Different clip length target
+uv run process_video.py /path/to/folder --min-duration 20 --max-duration 45
+
+# Skip visual filter (faster, useful for testing)
+uv run process_video.py /path/to/folder --no-visual-filter
+
+# Force re-run allin1 even if cache exists
+uv run process_video.py /path/to/folder --reanalyze
+
+# Custom run folder name
+uv run process_video.py /path/to/folder --name "2026-07-14-tight-cuts"
+
+# Multiple video files in the same folder
+uv run process_video.py /path/to/folder --video session.MOV
+```
+
+### Low-level subcommands (manual / one-off use)
+
+```bash
+# Analyze only
 uv run python clip-splitting/allin1_clip_extractor.py analyze video.MOV
-
-# Step 2: Build clips from analysis JSON (30-60s, multiples of 4 measures)
-uv run python clip-splitting/allin1_clip_extractor.py build-clips video_analysis.json
-
-# Step 3: Beat-density filter (removes talking/silence)
-uv run python clip-splitting/allin1_clip_extractor.py filter video_clips.json
-
-# Step 4: Visual filter (removes non-playing clips via Claude vision)
-uv run python clip-splitting/allin1_clip_extractor.py visual-filter \
-    video_clips_filtered.json video.MOV
-
-# Step 5: Render
-uv run python clip-splitting/allin1_clip_extractor.py render \
-    video_clips_filtered_visual.json video.MOV -o rendered/
 
 # Re-build clips with different duration (no re-analysis needed)
 uv run python clip-splitting/allin1_clip_extractor.py build-clips \
@@ -81,6 +113,22 @@ uv run python clip-splitting/allin1_clip_extractor.py build-clips \
 # Reconstruct downbeats from an old clips JSON (if no analysis JSON exists)
 uv run python clip-splitting/rebuild_clips.py old_clips.json
 ```
+
+### Adding a new algorithm
+
+Drop a file in `algorithms/`:
+
+```python
+# algorithms/my_algo.py
+ALGORITHM_NAME = "my-algo"
+ALGORITHM_VERSION = "1.0"
+
+def add_args(parser): ...         # register CLI flags
+def run(video_file, cache_dir, args) -> list[dict]: ...  # return clips
+def get_params(args) -> dict: ... # params to record in clips.json (optional)
+```
+
+Then: `uv run process_video.py /path/to/folder --algorithm my-algo`
 
 ## Status
 

@@ -1,14 +1,63 @@
-# Clip Splitting: Technical Approach (allin1)
-
-This document describes the current implementation of structure-aware clip extraction using the All-In-One Music Structure Analyzer (`allin1`).
+# Clip Splitting: Technical Approach
 
 For the previous librosa-based approach and why it failed, see [failed-approaches.md](failed-approaches.md).
 
 ## Overview
 
-The approach uses `allin1` — a deep learning model that jointly predicts beats, downbeats, segment boundaries, and segment labels. The analysis output is saved once as a raw JSON; clip building is a separate step so duration parameters can be changed without re-running the 6.5-hour analysis.
+`process_video.py` is the single entry point. It orchestrates a full pipeline — analysis, clip building, beat filtering, visual filtering, rendering — and writes results into a versioned folder alongside the source video.
 
-## What allin1 Provides
+The algorithm is pluggable: `--algorithm allin1` (default) uses the All-In-One Music Structure Analyzer. New algorithms live in `algorithms/` and are loaded by name without changing the orchestrator. See `algorithms/__init__.py` for the interface.
+
+### Output folder layout
+
+```
+session-folder/
+  video.MOV
+  analysis/
+    YYYY-MM-DD-allin1.json   ← cached raw allin1 output (beats, downbeats, segments)
+  clips/
+    YYYY-MM-DD-allin1/
+      clips.json             ← algorithm, params, summary, clip timings
+      _visual_cache.json     ← claude -p resume cache (internal)
+      clip-001.mp4
+      clip-002.mp4
+      ...
+```
+
+A new `clips/YYYY-MM-DD-allin1/` folder is created for each run (appending `-2`, `-3`, … on same-day reruns). The `analysis/` cache is shared across runs so the expensive allin1 step only runs once per recording.
+
+### clips.json format
+
+```json
+{
+  "algorithm": "allin1",
+  "algorithm_version": "harmonix-all",
+  "processed_at": "2026-07-14T10:30:00",
+  "video_file": "video.MOV",
+  "analysis_file": "analysis/2026-07-14-allin1.json",
+  "params": {
+    "min_duration": 30.0,
+    "max_duration": 60.0,
+    "beat_density_min": 1.2,
+    "beat_cv_max": 0.25,
+    "visual_filter": true,
+    "visual_filter_model": "claude-haiku-4-5",
+    "visual_filter_frames": 1,
+    "visual_filter_workers": 8
+  },
+  "summary": { "built": 161, "after_beat_filter": 127, "after_visual_filter": 123, "rendered": 123 },
+  "clips": [
+    { "filename": "clip-001.mp4", "start_time": 53.81, "end_time": 87.23, "duration": 33.42,
+      "num_measures": 16, "beat_density": 1.915, "segment_labels": ["verse"] }
+  ]
+}
+```
+
+## allin1 Algorithm
+
+The allin1 plugin (`algorithms/allin1.py`) uses a deep learning model that jointly predicts beats, downbeats, segment boundaries, and segment labels. The analysis output is saved once as a raw JSON; clip building is a separate step so duration parameters can be changed without re-running the 6.5-hour analysis.
+
+### What allin1 Provides
 
 From a single audio/video file, `allin1.analyze()` returns:
 
@@ -32,13 +81,14 @@ Reference: Kim et al., "All-In-One Metrical And Functional Structure Analysis Wi
 
 ## Pipeline Stages
 
-### Stage 1: analyze
+### Stage 1: Analysis (allin1)
 
 Runs allin1 and saves a raw `_analysis.json` containing beats, downbeats, segments, and BPM. No clip building happens here — this output is the stable artifact that can be reused with different clip parameters.
 
 ```bash
+# Handled automatically by process_video.py; cached in analysis/YYYY-MM-DD-allin1.json
+# Low-level:
 uv run python clip-splitting/allin1_clip_extractor.py analyze video.MOV
-# → video_analysis.json
 ```
 
 Processing time for a 95-minute recording on Intel Mac CPU:
@@ -65,7 +115,7 @@ Processing time for a 95-minute recording on Intel Mac CPU:
 }
 ```
 
-### Stage 2: build-clips
+### Stage 2: Clip Building
 
 Takes the analysis JSON and groups downbeats into clips. Duration logic:
 
@@ -76,10 +126,10 @@ Takes the analysis JSON and groups downbeats into clips. Duration logic:
 Each clip advances to the end of the previous one — no gaps, no overlaps.
 
 ```bash
-uv run python clip-splitting/allin1_clip_extractor.py build-clips video_analysis.json
-# → video_clips.json
+# Via process_video.py:
+uv run process_video.py /path/to/folder --min-duration 20 --max-duration 45
 
-# Adjust duration window
+# Low-level:
 uv run python clip-splitting/allin1_clip_extractor.py build-clips \
   video_analysis.json --min-duration 20 --max-duration 45
 ```
@@ -108,7 +158,7 @@ uv run python clip-splitting/allin1_clip_extractor.py build-clips \
 }
 ```
 
-### Stage 3: Visualization
+### Stage 3: Visualization (optional, low-level only)
 
 ```bash
 uv run python clip-splitting/allin1_clip_extractor.py build-clips \
@@ -119,7 +169,7 @@ The visualization shows:
 - **Panel 1**: Beats (blue), downbeats (green), segment boundaries (red dashed) with section labels
 - **Panel 2**: Clip boundaries as colored spans with clip IDs
 
-### Stage 4: Beat-Density Filter
+### Stage 4: Beat-Density Filter (auto, skipped if algorithm omits metrics)
 
 Practice sessions contain talking, tuning, and silence between songs. Two per-clip metrics distinguish music from non-music:
 
@@ -131,18 +181,15 @@ Practice sessions contain talking, tuning, and silence between songs. Two per-cl
 Default filter: keep clips where `beat_density >= 1.2` AND `beat_cv <= 0.25`.
 
 ```bash
-uv run python clip-splitting/allin1_clip_extractor.py filter video_clips.json
-# → video_clips_filtered.json
+# Via process_video.py:
+uv run process_video.py /path/to/folder --min-beat-density 1.0 --max-beat-cv 0.3
+uv run process_video.py /path/to/folder --no-beat-filter
 
-# Preview without writing
+# Low-level:
 uv run python clip-splitting/allin1_clip_extractor.py filter video_clips.json --dry-run
-
-# Adjust thresholds
-uv run python clip-splitting/allin1_clip_extractor.py filter video_clips.json \
-  --min-beat-density 1.0 --max-beat-cv 0.3
 ```
 
-### Stage 5: Visual Filter (Claude vision)
+### Stage 5: Visual Filter (Claude vision, optional)
 
 After beat-density filtering, an optional visual pass checks whether people are **visibly playing instruments** in each clip. This catches edge cases that the audio-only filter misses: clips where the band is on stage but not yet playing, someone walking to their instrument, etc.
 
@@ -163,26 +210,27 @@ After beat-density filtering, an optional visual pass checks whether people are 
 **Authentication:** Uses Claude Code's existing auth — no `ANTHROPIC_API_KEY` needed.
 
 ```bash
-uv run python clip-splitting/allin1_clip_extractor.py visual-filter \
-  video_clips_filtered.json video.MOV
-# → video_clips_filtered_visual.json
+# Via process_video.py:
+uv run process_video.py /path/to/folder --visual-model claude-haiku-4-5 --visual-frames 3
+uv run process_video.py /path/to/folder --no-visual-filter
 
-# Dry run, resume, multi-frame
+# Low-level:
 uv run python clip-splitting/allin1_clip_extractor.py visual-filter \
   video_clips_filtered.json video.MOV --dry-run
-uv run python clip-splitting/allin1_clip_extractor.py visual-filter \
-  video_clips_filtered.json video.MOV --no-cache
 uv run python clip-splitting/allin1_clip_extractor.py visual-filter \
   video_clips_filtered.json video.MOV --frames 3 --workers 16
 ```
 
-### Stage 6: Rendering
+### Stage 6: Rendering (clip-NNN.mp4)
 
 Clips are rendered with `ffmpeg -c copy` for fast extraction (no re-encoding).
 
 Note: `ffmpeg -c copy` seeks to the nearest keyframe, which can cause clip starts to be slightly before the requested time. Clip endings tend to be more precisely aligned. Re-encoding with `-c:v libx264` would give frame-exact cuts but is much slower.
 
+`process_video.py` renders clips as `clip-001.mp4`, `clip-002.mp4`, … in the run folder. The low-level subcommand preserves the source file extension:
+
 ```bash
+# Low-level (preserves source extension, e.g. .MOV):
 uv run python clip-splitting/allin1_clip_extractor.py render \
   video_clips_filtered_visual.json video.MOV -o rendered/
 
