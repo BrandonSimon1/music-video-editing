@@ -141,4 +141,5 @@ The 2025-10-30 practice recording is the primary test case:
 
 | Date | Experiment | Result |
 |------|------------|--------|
-| 2026-07-14 | Exp 00: Feature baseline | Complete. Key finding: over the full 94-min recording, allin1's 256 segments are mostly intra-song structural boundaries (verse→chorus), which are *energetic* hits — percussive RMS and onset strength are higher at boundaries, not lower. Energy-drop-based gap detection needs song-level ground truth, not allin1 segment ground truth. Exp 01 will produce that. |
+| 2026-07-14 | Exp 00: Feature baseline | Complete. Key finding: allin1's 256 segments are mostly intra-song structural transitions (verse→chorus hits), not silence gaps. Energy features are higher at those boundaries, not lower. Song-level gap detection needs coarser ground truth. |
+| 2026-07-14 | Exp 01: Gap detection | Complete. Gap score (product of inverse percussive RMS and inverse onset strength) detects inter-song silences in <1s from saved features. Best params so far: threshold=0.4, smooth=8s, min_gap=20s, merge=90s → 12 segments (4–15 min each). Core problem: no ground truth for this recording, so parameter tuning is blind. This is the motivation for Exp 02: LLM can reason about which gap score valleys are genuine song boundaries without needing hand-tuned thresholds. |

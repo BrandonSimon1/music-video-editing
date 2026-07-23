@@ -1,0 +1,150 @@
+{
+  "params": {
+    "threshold": 0.4,
+    "smooth_window": 8,
+    "min_gap": 20.0,
+    "merge_distance": 90.0,
+    "min_song": 180.0
+  },
+  "gaps": [
+    {
+      "start": 108.0,
+      "end": 909.0,
+      "duration": 801.0
+    },
+    {
+      "start": 1012.0,
+      "end": 1041.0,
+      "duration": 30.0
+    },
+    {
+      "start": 1287.0,
+      "end": 1312.0,
+      "duration": 26.0
+    },
+    {
+      "start": 1437.0,
+      "end": 1461.0,
+      "duration": 25.0
+    },
+    {
+      "start": 1658.0,
+      "end": 1764.0,
+      "duration": 106.0
+    },
+    {
+      "start": 1947.0,
+      "end": 2045.0,
+      "duration": 98.0
+    },
+    {
+      "start": 2266.0,
+      "end": 2292.0,
+      "duration": 27.0
+    },
+    {
+      "start": 2574.0,
+      "end": 2645.0,
+      "duration": 71.0
+    },
+    {
+      "start": 2829.0,
+      "end": 3282.0,
+      "duration": 453.0
+    },
+    {
+      "start": 3589.0,
+      "end": 4194.0,
+      "duration": 605.0
+    },
+    {
+      "start": 4296.0,
+      "end": 5290.0,
+      "duration": 994.0
+    },
+    {
+      "start": 5435.0,
+      "end": 5518.0,
+      "duration": 83.0
+    },
+    {
+      "start": 5615.0,
+      "end": 5699.0,
+      "duration": 84.0
+    }
+  ],
+  "songs": [
+    {
+      "song_num": 1,
+      "start_time": 0.0,
+      "end_time": 508.5,
+      "duration": 508.5
+    },
+    {
+      "song_num": 2,
+      "start_time": 508.5,
+      "end_time": 1027.0,
+      "duration": 518.5
+    },
+    {
+      "song_num": 3,
+      "start_time": 1027.0,
+      "end_time": 1300.0,
+      "duration": 273.0
+    },
+    {
+      "song_num": 4,
+      "start_time": 1449.5,
+      "end_time": 1711.0,
+      "duration": 261.5
+    },
+    {
+      "song_num": 5,
+      "start_time": 1711.0,
+      "end_time": 1996.0,
+      "duration": 285.0
+    },
+    {
+      "song_num": 6,
+      "start_time": 1996.0,
+      "end_time": 2279.5,
+      "duration": 283.5
+    },
+    {
+      "song_num": 7,
+      "start_time": 2279.5,
+      "end_time": 2609.5,
+      "duration": 330.0
+    },
+    {
+      "song_num": 8,
+      "start_time": 2609.5,
+      "end_time": 3055.5,
+      "duration": 446.0
+    },
+    {
+      "song_num": 9,
+      "start_time": 3055.5,
+      "end_time": 3891.5,
+      "duration": 836.0
+    },
+    {
+      "song_num": 10,
+      "start_time": 3891.5,
+      "end_time": 4793.0,
+      "duration": 901.5
+    },
+    {
+      "song_num": 11,
+      "start_time": 4793.0,
+      "end_time": 5476.5,
+      "duration": 683.5
+    },
+    {
+      "song_num": 12,
+      "start_time": 5476.5,
+      "end_time": 5657.0,
+      "duration": 180.5
+    }
+  ]
+}
