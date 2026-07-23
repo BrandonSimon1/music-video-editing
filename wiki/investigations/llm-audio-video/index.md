@@ -141,4 +141,4 @@ The 2025-10-30 practice recording is the primary test case:
 
 | Date | Experiment | Result |
 |------|------------|--------|
-| 2026-07-14 | Exp 00 started | — |
+| 2026-07-14 | Exp 00: Feature baseline | Complete. Key finding: over the full 94-min recording, allin1's 256 segments are mostly intra-song structural boundaries (verse→chorus), which are *energetic* hits — percussive RMS and onset strength are higher at boundaries, not lower. Energy-drop-based gap detection needs song-level ground truth, not allin1 segment ground truth. Exp 01 will produce that. |
