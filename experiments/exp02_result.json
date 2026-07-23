@@ -1,0 +1,47 @@
+{
+  "model": "claude-sonnet-4-6",
+  "params": {
+    "interval": 10,
+    "smooth_window": 8
+  },
+  "raw_response": "{\"reasoning\": \"Scanned the full timeline for sustained high-gap-score regions lasting >20s, using a threshold of ~0.65+ to distinguish genuine silence from brief within-song pauses. Two clear gaps stand out: (1) 11:30\u201313:00 has 7+ consecutive readings \u2265 0.69, peaking at 0.88 at 12:40 \u2014 the strongest and longest quiet region in the entire recording; playing resumes sharply at 13:00 (0.46). (2) 33:30\u201334:00 has 4 consecutive readings 0.70\u20130.81, followed by an immediate crash to 0.25 at 34:10, indicating sudden resumption. All other high spikes (e.g. 45:40: 0.86, 54:30: 0.82, 58:40: 0.05 outlier, 69:20: 0.83) are single-sample transients lasting \u226410s and are likely cymbal crashes, brief hesitations, or measurement artifacts \u2014 not song boundaries. The second half (34:10\u201395:00) shows no sustained silence despite 61 minutes of material; scores are somewhat elevated overall (0.5\u20130.75 range) suggesting a change in playing style rather than song gaps. A region around 74:50\u201376:30 has elevated scores (0.61\u20130.85) but they never sustain \u22650.65 for more than 2 consecutive readings and the surrounding context shows no clear playing restart, so it is treated as an in-song quiet stretch.\", \"boundaries\": [{\"time_seconds\": 735, \"gap_start\": 690, \"gap_end\": 780, \"confidence\": \"high\", \"reason\": \"Strongest silence in recording: 11:30 rises to 0.74, then 11:50\u201312:50 holds \u22650.69 for 7 consecutive samples peaking at 0.88 (12:40). Score drops to 0.46 at 13:00, signaling clear song resumption.\"}, {\"time_seconds\": 2030, \"gap_start\": 2010, \"gap_end\": 2050, \"confidence\": \"high\", \"reason\": \"33:30\u201334:00 shows four consecutive readings at 0.73, 0.81, 0.80, 0.70, followed by immediate collapse to 0.25 at 34:10. Sharp V-shape is consistent with between-song pause, not an in-song breakdown.\"}], \"songs\": [{\"song_num\": 1, \"start_seconds\": 0, \"end_seconds\": 690, \"duration_minutes\": 11.5}, {\"song_num\": 2, \"start_seconds\": 780, \"end_seconds\": 2010, \"duration_minutes\": 20.5}, {\"song_num\": 3, \"start_seconds\": 2050, \"end_seconds\": 5700, \"duration_minutes\": 60.8}]}",
+  "parsed": {
+    "reasoning": "Scanned the full timeline for sustained high-gap-score regions lasting >20s, using a threshold of ~0.65+ to distinguish genuine silence from brief within-song pauses. Two clear gaps stand out: (1) 11:30\u201313:00 has 7+ consecutive readings \u2265 0.69, peaking at 0.88 at 12:40 \u2014 the strongest and longest quiet region in the entire recording; playing resumes sharply at 13:00 (0.46). (2) 33:30\u201334:00 has 4 consecutive readings 0.70\u20130.81, followed by an immediate crash to 0.25 at 34:10, indicating sudden resumption. All other high spikes (e.g. 45:40: 0.86, 54:30: 0.82, 58:40: 0.05 outlier, 69:20: 0.83) are single-sample transients lasting \u226410s and are likely cymbal crashes, brief hesitations, or measurement artifacts \u2014 not song boundaries. The second half (34:10\u201395:00) shows no sustained silence despite 61 minutes of material; scores are somewhat elevated overall (0.5\u20130.75 range) suggesting a change in playing style rather than song gaps. A region around 74:50\u201376:30 has elevated scores (0.61\u20130.85) but they never sustain \u22650.65 for more than 2 consecutive readings and the surrounding context shows no clear playing restart, so it is treated as an in-song quiet stretch.",
+    "boundaries": [
+      {
+        "time_seconds": 735,
+        "gap_start": 690,
+        "gap_end": 780,
+        "confidence": "high",
+        "reason": "Strongest silence in recording: 11:30 rises to 0.74, then 11:50\u201312:50 holds \u22650.69 for 7 consecutive samples peaking at 0.88 (12:40). Score drops to 0.46 at 13:00, signaling clear song resumption."
+      },
+      {
+        "time_seconds": 2030,
+        "gap_start": 2010,
+        "gap_end": 2050,
+        "confidence": "high",
+        "reason": "33:30\u201334:00 shows four consecutive readings at 0.73, 0.81, 0.80, 0.70, followed by immediate collapse to 0.25 at 34:10. Sharp V-shape is consistent with between-song pause, not an in-song breakdown."
+      }
+    ],
+    "songs": [
+      {
+        "song_num": 1,
+        "start_seconds": 0,
+        "end_seconds": 690,
+        "duration_minutes": 11.5
+      },
+      {
+        "song_num": 2,
+        "start_seconds": 780,
+        "end_seconds": 2010,
+        "duration_minutes": 20.5
+      },
+      {
+        "song_num": 3,
+        "start_seconds": 2050,
+        "end_seconds": 5700,
+        "duration_minutes": 60.8
+      }
+    ]
+  }
+}
