@@ -4,8 +4,18 @@ Welcome to the music video editing project wiki. This wiki documents various mus
 
 ## Projects
 
+### Splitting workstream
+
+Turning long recordings into short clips.
+
 - [Song Splitting](projects/song-splitting/index.md) - Automatic segmentation of concert recordings into individual songs
 - [Clip Splitting](projects/clip-splitting/index.md) - Beat-aligned extraction of short clips from music videos
+
+### Captioning workstream
+
+A separate, independent workstream: taking already-cut clips and preparing them for posting.
+
+- [Caption Overlay](projects/caption-overlay/index.md) - Burned-in text caption (song title + emoji) on video clips, in the style of social story captions
 
 ## Investigations
 
