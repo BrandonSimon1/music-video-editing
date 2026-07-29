@@ -25,7 +25,11 @@ EMOJI_SUPPORTED_SIZES = [160, 96, 64, 48, 32, 20]
 
 PADDING_X = 36
 PADDING_Y = 20
-CORNER_RADIUS_RATIO = 0.5  # of box height -> full pill
+CORNER_RADIUS_RATIO = 0.28  # of box height
+# Bounding-box centering skews visually high when text has descenders (e.g.
+# "g", "y") — the eye centers on cap-height/baseline, not the full glyph
+# bbox. Nudge down by a fraction of text height to compensate.
+VERTICAL_OFFSET_RATIO = 0.08
 SHADOW_BLUR_MARGIN = 16
 SHADOW_OFFSET = (0, 4)
 SHADOW_OPACITY = 60  # 0-255
@@ -98,9 +102,10 @@ def render_caption_image(text: str, emoji: str | None, font_size: int = 44) -> I
     pill_box = (SHADOW_BLUR_MARGIN, SHADOW_BLUR_MARGIN, SHADOW_BLUR_MARGIN + box_w, SHADOW_BLUR_MARGIN + box_h)
     draw.rounded_rectangle(pill_box, radius=radius, fill=(255, 255, 255, 255))
 
-    # Text, vertically centered.
+    # Text, vertically centered (with a small downward nudge — see VERTICAL_OFFSET_RATIO).
     text_x = SHADOW_BLUR_MARGIN + PADDING_X
-    text_y = SHADOW_BLUR_MARGIN + (box_h - text_h) / 2 - text_bbox[1]
+    text_y = (SHADOW_BLUR_MARGIN + (box_h - text_h) / 2 - text_bbox[1]
+              + text_h * VERTICAL_OFFSET_RATIO)
     draw.text((text_x, text_y), text, font=font, fill=(20, 20, 20, 255))
 
     if emoji_img:
