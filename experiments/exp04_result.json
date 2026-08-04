@@ -1,0 +1,71 @@
+{
+  "experiment": "exp04_video_frames",
+  "video_file": "clip-splitting/2025-10-30-mcs-practice.MOV",
+  "params": {
+    "window_minutes": 3.0,
+    "frame_interval": 10,
+    "model": "claude-sonnet-4-6"
+  },
+  "results": [
+    {
+      "boundary": "10:55",
+      "center_seconds": 655.0,
+      "verdict": "confirmed",
+      "refined_timestamp": "10:55",
+      "evidence": "Around 10:35\u201310:55 (marked frames), the musicians appear to stop playing \u2014 postures shift from active playing stances to standing/resting positions. At 10:55 and 11:05 there is visible movement and what looks like a reset/discussion moment. By 11:25 the group appears to have settled into new playing positions, suggesting the next song has begun or is about to begin.",
+      "notes": "The red-highlighted frames at 10:35, 10:45, 10:55, 11:05, and 11:15 show a cluster of activity changes. The transition from the active playing stance visible in the 9:xx frames to the more relaxed/moving postures in the 10:35\u201311:15 range is consistent with an inter-song break. By 11:25 onward the group appears re-engaged.",
+      "raw_response": "{\"verdict\": \"confirmed\", \"refined_timestamp\": \"10:55\", \"evidence\": \"Around 10:35\u201310:55 (marked frames), the musicians appear to stop playing \u2014 postures shift from active playing stances to standing/resting positions. At 10:55 and 11:05 there is visible movement and what looks like a reset/discussion moment. By 11:25 the group appears to have settled into new playing positions, suggesting the next song has begun or is about to begin.\", \"notes\": \"The red-highlighted frames at 10:35, 10:45, 10:55, 11:05, and 11:15 show a cluster of activity changes. The transition from the active playing stance visible in the 9:xx frames to the more relaxed/moving postures in the 10:35\u201311:15 range is consistent with an inter-song break. By 11:25 onward the group appears re-engaged.\"}",
+      "montage_path": "/Users/brandonsimon/.claude/jobs/654af401/tmp/montages/boundary_10-55.jpg"
+    },
+    {
+      "boundary": "35:40",
+      "center_seconds": 2140.0,
+      "verdict": "confirmed",
+      "refined_timestamp": "35:20",
+      "evidence": "Before 35:20, musicians are standing upright in playing posture with instruments visible. At 35:20 (first red-marked frame) and through 36:00, the musicians are visibly crouching or lowering their bodies \u2014 a posture consistent with setting down instruments or resetting. From 36:10 onward they return to standing playing posture, and by 36:40\u201337:00 appear fully re-engaged. The transition from upright playing \u2192 crouch/reset \u2192 upright playing brackets the boundary.",
+      "notes": "The reset window spans roughly 35:20\u201336:10, about 50 seconds. The sharpest drop in playing posture is at 35:20, making that the most likely song-end point. New song activity appears to resume around 36:10\u201336:20.",
+      "raw_response": "{\"verdict\": \"confirmed\", \"refined_timestamp\": \"35:20\", \"evidence\": \"Before 35:20, musicians are standing upright in playing posture with instruments visible. At 35:20 (first red-marked frame) and through 36:00, the musicians are visibly crouching or lowering their bodies \u2014 a posture consistent with setting down instruments or resetting. From 36:10 onward they return to standing playing posture, and by 36:40\u201337:00 appear fully re-engaged. The transition from upright playing \u2192 crouch/reset \u2192 upright playing brackets the boundary.\", \"notes\": \"The reset window spans roughly 35:20\u201336:10, about 50 seconds. The sharpest drop in playing posture is at 35:20, making that the most likely song-end point. New song activity appears to resume around 36:10\u201336:20.\"}",
+      "montage_path": "/Users/brandonsimon/.claude/jobs/654af401/tmp/montages/boundary_35-40.jpg"
+    },
+    {
+      "boundary": "45:59",
+      "center_seconds": 2759.0,
+      "verdict": "confirmed",
+      "refined_timestamp": "45:39",
+      "evidence": "Around 45:39\u201346:19 (the red-highlighted frames), the musicians visibly shift posture and position \u2014 the person in the red shirt appears to step back or turn, and the overall arrangement in the room changes compared to the active playing frames before 45:29. The scene looks static and non-playing during 45:39\u201346:19, consistent with a between-song reset. By 46:29 the musicians are repositioned and appear to be settling back into playing posture.",
+      "notes": "The red highlight on 45:39 through 46:19 aligns with the visual gap. The transition back to playing seems to begin around 46:29. No obvious count-in gesture is visible at this resolution, but the posture shift and stillness in the flagged window strongly suggest a song boundary rather than an intra-song pause.",
+      "raw_response": "{\"verdict\":\"confirmed\",\"refined_timestamp\":\"45:39\",\"evidence\":\"Around 45:39\u201346:19 (the red-highlighted frames), the musicians visibly shift posture and position \u2014 the person in the red shirt appears to step back or turn, and the overall arrangement in the room changes compared to the active playing frames before 45:29. The scene looks static and non-playing during 45:39\u201346:19, consistent with a between-song reset. By 46:29 the musicians are repositioned and appear to be settling back into playing posture.\",\"notes\":\"The red highlight on 45:39 through 46:19 aligns with the visual gap. The transition back to playing seems to begin around 46:29. No obvious count-in gesture is visible at this resolution, but the posture shift and stillness in the flagged window strongly suggest a song boundary rather than an intra-song pause.\"}",
+      "montage_path": "/Users/brandonsimon/.claude/jobs/654af401/tmp/montages/boundary_45-59.jpg"
+    },
+    {
+      "boundary": "55:03",
+      "center_seconds": 3303.0,
+      "verdict": "confirmed",
+      "refined_timestamp": "54:53",
+      "evidence": "In the 52:03\u201354:33 window, musicians are in active playing postures with instruments engaged. Starting at 54:43 (first marked frame), there is a visible posture shift \u2014 musicians appear to be lowering instruments and moving around rather than playing. The 54:53\u201355:23 marked frames show clear non-playing activity: bodies turned, movement suggesting talking or resetting, no playing stance. By 55:33 the musicians are back in a settled position that looks like the start of a new setup or count-in, and from 55:43 onward they appear to be playing again in a fresh posture.",
+      "notes": "The transition appears to span roughly 54:43\u201355:33, suggesting a brief gap or reset between songs. No one appears to leave or enter the frame. The reset looks relatively quick (~50 seconds), consistent with a between-song pause rather than a long break.",
+      "raw_response": "```json\n{\n  \"verdict\": \"confirmed\",\n  \"refined_timestamp\": \"54:53\",\n  \"evidence\": \"In the 52:03\u201354:33 window, musicians are in active playing postures with instruments engaged. Starting at 54:43 (first marked frame), there is a visible posture shift \u2014 musicians appear to be lowering instruments and moving around rather than playing. The 54:53\u201355:23 marked frames show clear non-playing activity: bodies turned, movement suggesting talking or resetting, no playing stance. By 55:33 the musicians are back in a settled position that looks like the start of a new setup or count-in, and from 55:43 onward they appear to be playing again in a fresh posture.\",\n  \"notes\": \"The transition appears to span roughly 54:43\u201355:33, suggesting a brief gap or reset between songs. No one appears to leave or enter the frame. The reset looks relatively quick (~50 seconds), consistent with a between-song pause rather than a long break.\"\n}\n```",
+      "montage_path": "/Users/brandonsimon/.claude/jobs/654af401/tmp/montages/boundary_55-03.jpg"
+    },
+    {
+      "boundary": "69:54",
+      "center_seconds": 4194.0,
+      "verdict": "confirmed",
+      "refined_timestamp": "69:34",
+      "evidence": "Around 69:34\u201370:14 (the red-highlighted frames), the musicians appear to stop playing and there is visible movement/repositioning. Before this window the band is in active playing posture; after 70:24 they settle back into a new playing stance. The red highlight markers bracket the transition zone, and body language shifts noticeably around 69:34\u201370:14.",
+      "notes": "The transition appears relatively brief with minimal gap \u2014 likely a quick reset between songs rather than a long break. By 70:24 the group looks re-set and ready, suggesting the new song begins around 70:14\u201370:24.",
+      "raw_response": "{\"verdict\":\"confirmed\",\"refined_timestamp\":\"69:34\",\"evidence\":\"Around 69:34\u201370:14 (the red-highlighted frames), the musicians appear to stop playing and there is visible movement/repositioning. Before this window the band is in active playing posture; after 70:24 they settle back into a new playing stance. The red highlight markers bracket the transition zone, and body language shifts noticeably around 69:34\u201370:14.\",\"notes\":\"The transition appears relatively brief with minimal gap \u2014 likely a quick reset between songs rather than a long break. By 70:24 the group looks re-set and ready, suggesting the new song begins around 70:14\u201370:24.\"}",
+      "montage_path": "/Users/brandonsimon/.claude/jobs/654af401/tmp/montages/boundary_69-54.jpg"
+    },
+    {
+      "boundary": "62:30 (extra)",
+      "center_seconds": 3750.0,
+      "verdict": "confirmed",
+      "refined_timestamp": "62:10",
+      "evidence": "Around 62:00\u201362:10, the musicians visibly shift from active playing postures to a more upright, resting position \u2014 instruments appear to be lowered or held loosely. The frames at 62:10\u201362:50 (marked with \u25c0) show the group standing/milling rather than in playing stance. By 63:00\u201363:10 they are resettling into playing position, suggesting a reset. The transition out of playing is most visible at 62:10.",
+      "notes": "The pause appears short (~40 seconds of non-playing). No one appears to leave the frame. The restart around 63:00\u201363:10 looks like a count-in or pickup moment. This is consistent with a brief inter-song gap rather than a long break.",
+      "raw_response": "{\"verdict\": \"confirmed\", \"refined_timestamp\": \"62:10\", \"evidence\": \"Around 62:00\u201362:10, the musicians visibly shift from active playing postures to a more upright, resting position \u2014 instruments appear to be lowered or held loosely. The frames at 62:10\u201362:50 (marked with \u25c0) show the group standing/milling rather than in playing stance. By 63:00\u201363:10 they are resettling into playing position, suggesting a reset. The transition out of playing is most visible at 62:10.\", \"notes\": \"The pause appears short (~40 seconds of non-playing). No one appears to leave the frame. The restart around 63:00\u201363:10 looks like a count-in or pickup moment. This is consistent with a brief inter-song gap rather than a long break.\"}",
+      "montage_path": "/Users/brandonsimon/.claude/jobs/654af401/tmp/montages/boundary_62-30 (extra).jpg"
+    }
+  ]
+}

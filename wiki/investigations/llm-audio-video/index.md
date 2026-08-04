@@ -64,45 +64,36 @@ The LLM doesn't replace beat tracking — it reasons *about* the outputs of chea
 - Output: `experiments/exp03_mcp_audio_analyzer.py` (or just a documented session if MCP tools make scripting unnecessary)
 - Repo: https://github.com/JuzzyDee/audio-analyzer-rs
 
-### Phase 3 — LLM with Spectrogram Images (Weeks 3–5)
+### Phase 3 — Video Frame Confirmation (Weeks 3–4)
 
-**Exp 04 (was 03): Mel Spectrogram Strips → Claude Vision**
-- Generate mel spectrograms as wide PNG strips (5-minute window, scrolling with 1-minute overlap)
-- Ask Claude: "This is a mel spectrogram. Identify timestamps of phrase and song boundaries. Describe what you see."
-- Evaluate against ground truth; compare to Exp 02
+> **Note:** Spectrogram/chromagram image experiments (originally Exp 04/05) superseded by audio-analyzer-rs MCP, which provides richer harmonic/spectral analysis faster and more token-efficiently than image strips. Skipping directly to video frames, which is the one signal the MCP approach cannot provide.
 
-**Exp 05 (was 04): Chromagram and Tempogram → Claude Vision**
-- Chromagram: reveals harmonic content changes (key changes, song transitions)
-- Tempogram: reveals rhythmic stability (drops to noise during gaps, shifts at song starts)
-- Test each type independently, then combined in a single image panel
+**Exp 04: Video Frame Strips → Claude Vision (targeted confirmation)**
+- For each boundary identified in Exp 03, extract a frame strip covering the ±3-minute window (1 frame/10s → ~36 frames)
+- Build a labeled grid montage (timestamp overlay on each frame)
+- Ask Claude: "These frames are from a music practice video. Does this window show a song ending and a new song starting, or an intra-song breakdown/pause? Describe what you see."
+- Special focus: resolve the ambiguous 60:44–65:43 quiet zone (is it a song boundary or a long breakdown?)
+- Confirm/deny each boundary; refine timestamps using visual cues (instruments put down, people talking, walking off, new song count-in)
+- Output: `experiments/exp04_video_frames.py`
 
-Output: `experiments/exp04_spectrogram_llm.py`
+### Phase 4 — Hybrid Integration (Weeks 4–5)
 
-### Phase 4 — LLM with Video Frames (Week 5)
+**Exp 05: Full Hybrid Song Boundary Algorithm**
+- Stage 1: MCP full_analysis → LLM clusters section boundaries into candidate song boundaries
+- Stage 2: For medium-confidence candidates, extract video frame strip → Claude vision confirm/deny
+- Stage 3: Final song list with confidence-weighted timestamps
+- Goal: fast (seconds of Rust + ~10 API calls), robust to bad audio, works on any genre
+- Output: `experiments/exp05_hybrid_song_boundary.py`
 
-**Exp 06 (was 05): Video Frame Strips → Claude Vision**
-- Sample 1 frame per 10 seconds; send a montage of 30 frames (~5 minutes)
-- Ask: "These frames are from a music practice video. Identify which frames mark the beginning or end of a song. Describe visual cues."
-- Compare to audio-only Exp 02/03
-- Output: `experiments/exp06_video_frames_llm.py`
-
-### Phase 5 — Hybrid Integration (Weeks 6–7)
-
-**Exp 07 (was 06): Hybrid Song Boundary Detection**
-- Stage 1: Gap detection (Exp 01) narrows candidate windows to ±60s around likely boundaries
-- Stage 2: Claude reviews mel spectrogram + video frames in the candidate window to confirm and refine
-- Goal: fast (seconds of CPU + a few API calls), robust to bad audio
-- Output: `experiments/exp07_hybrid_song_boundary.py`
-
-**Exp 08 (was 07): Hybrid Clip/Phrase Boundary Detection**
+**Exp 06: Hybrid Clip/Phrase Boundary Detection**
 - Within a detected song, find phrase boundaries every 30–60s
-- Approach: beat tracking (librosa) for beat times → chromagram showing phrase structure → Claude identifies which beat is the best cut point
+- Approach: MCP rhythm analysis for beat/downbeat times → LLM picks best cut points given phrase structure
 - Goal: replace allin1's 6.5-hour downbeat detection with a fast equivalent
-- Output: `experiments/exp08_hybrid_clip_boundary.py`
+- Output: `experiments/exp06_hybrid_clip_boundary.py`
 
-### Phase 6 — End-to-End Algorithm (Weeks 8–9)
+### Phase 5 — End-to-End Algorithm (Weeks 5–6)
 
-**Exp 09 (was 08): Full Pipeline as a New Algorithm Plugin**
+**Exp 07: Full Pipeline as a New Algorithm Plugin**
 - Implement `algorithms/llm_hybrid.py` for `process_video.py`
 - Full flow: song detection → clip building → visual filter → render
 - Benchmark vs. allin1: accuracy, runtime, API cost per hour of video
@@ -155,4 +146,5 @@ The 2025-10-30 practice recording is the primary test case:
 | 2026-07-14 | Exp 00: Feature baseline | Complete. Key finding: allin1's 256 segments are mostly intra-song structural transitions (verse→chorus hits), not silence gaps. Energy features are higher at those boundaries, not lower. Song-level gap detection needs coarser ground truth. |
 | 2026-07-14 | Exp 01: Gap detection | Complete. Gap score detects silences in <1s from saved features. Best params → 12 segments (4–15 min). Core problem: no ground truth, so parameter sensitivity is opaque. Motivates Exp 02. |
 | 2026-07-14 | Exp 02: LLM text features | Complete. Sent 570-row ASCII gap score table (~4200 tokens) to claude-sonnet-4-6. Found 2 high-confidence boundaries (11:30, 33:30) → 3 songs. Key insight: LLM correctly diagnosed that the second half (34:10–95:00) has consistently elevated gap scores not because of song breaks, but because the playing style changed — looser, less distinct stops. Rule-based gap detection would have over-split this section. **Gap score text alone is insufficient for the second half; video frames needed to confirm visual song boundaries.** |
+| 2026-08-03 | Exp 04: Video frame confirmation | Complete. All 6 MCP-identified boundaries confirmed visually (6/6). The ambiguous 60:44–65:43 quiet zone confirmed as a genuine song boundary at 62:10. Final result: **7 songs** with timestamps refined by visual cues (e.g., 35:40→35:20, 45:59→45:39, 55:03→54:53, 69:54→69:34, new boundary at 62:10). Visual evidence: musicians shifting posture, lowering instruments, moving between songs. |
 | 2026-08-03 | Exp 03: audio-analyzer-rs MCP | Complete. Installed audio-analyzer-rs MCP server (pure Rust, Symphonia decoder). Note: MOV unsupported — ffmpeg extraction to FLAC required first. Full analysis of 95 min completed in 295s. MCP section boundaries: 163 detected (intra-song, same class as allin1). **Approach: sent all 163 boundaries to LLM for song-level clustering.** Result: 5 boundaries → 6 songs. Key wins over Exp 02: (1) harmonic cascade signal (consecutive harmonic-only boundaries = key change = new song) pinned boundary at 10:55 vs 11:30; (2) **confidence-1.00 boundary at 45:59 (max in dataset) + longest quiet stretch (7 min) revealed a song boundary completely invisible to gap score alone**; (3) 55:03 and 69:54 boundaries found in second half where Exp 02 was blind. MCP onset strength time-series confirmed all 5 boundaries via quiet-zone analysis. Open question: 5-min quiet at 60:44–65:43 may be additional boundary or long breakdown. |
