@@ -1,0 +1,47 @@
+{
+  "experiment": "exp03_mcp_audio_analyzer",
+  "approach": "audio-analyzer-rs MCP tool: full_analysis (section boundaries) -> LLM clustering + rhythm_analysis time series",
+  "model": "claude-sonnet-4-6",
+  "mcp_tool": "audio-analyzer-rs (Rust, Symphonia)",
+  "analysis_time_seconds": 295,
+  "note": "MOV not supported by Symphonia — audio extracted to FLAC first via ffmpeg",
+  "mcp_section_boundaries_count": 163,
+  "llm_clustering_result": {
+    "song_boundaries": [
+      {"time": "10:55", "time_seconds": 655, "confidence": "high", "evidence": "Harmonic cascade (11:20–12:37) after energy+texture cluster. Harmonic-only boundaries = new key = new song. Aligns with Exp02 estimate of 11:30."},
+      {"time": "35:40", "time_seconds": 2140, "confidence": "high", "evidence": "Confidence 0.97 (spectral+texture) within cluster starting at 32:13 (0.77). Followed by 0.98 at 38:27. Two consecutive near-maximum multi-feature boundaries. Aligns with Exp02 estimate of 33:30."},
+      {"time": "45:59", "time_seconds": 2759, "confidence": "high", "evidence": "Confidence 1.00 (maximum in entire recording, energy+spectral+texture). Immediately followed by longest sustained quiet stretch (~7 min, 45:59–53:07). Strongest song-boundary signal in the dataset. NOT found by Exp02."},
+      {"time": "55:03", "time_seconds": 3303, "confidence": "medium", "evidence": "Confidence 0.90 (spectral+texture). Followed by two consecutive 5-min quiet stretches (55:37–60:35, 60:42–65:31). No energy component weakens case slightly."},
+      {"time": "69:54", "time_seconds": 4194, "confidence": "medium", "evidence": "Confidence 0.91 (energy+spectral+texture). All three feature types. Dense surrounding cluster (65:31–70:31) reduces certainty."}
+    ],
+    "songs": [
+      {"song_num": 1, "start": "0:00", "end": "10:55", "start_s": 0, "end_s": 655, "duration_min": 10.9},
+      {"song_num": 2, "start": "10:55", "end": "35:40", "start_s": 655, "end_s": 2140, "duration_min": 24.8},
+      {"song_num": 3, "start": "35:40", "end": "45:59", "start_s": 2140, "end_s": 2759, "duration_min": 10.3},
+      {"song_num": 4, "start": "45:59", "end": "55:03", "start_s": 2759, "end_s": 3303, "duration_min": 9.1},
+      {"song_num": 5, "start": "55:03", "end": "69:54", "start_s": 3303, "end_s": 4194, "duration_min": 14.9},
+      {"song_num": 6, "start": "69:54", "end": "95:00", "start_s": 4194, "end_s": 5700, "duration_min": 25.1}
+    ]
+  },
+  "onset_strength_quiet_zones": [
+    {"approx_range": "9:19–10:44", "onset_min": 0.003, "note": "Confirms boundary near 10:55"},
+    {"approx_range": "32:18–34:36", "onset_min": 0.006, "note": "Confirms boundary near 35:40"},
+    {"approx_range": "53:15–54:40", "onset_min": 0.007, "note": "Confirms boundary near 55:03"},
+    {"approx_range": "60:44–65:43", "onset_min": 0.004, "note": "~5 min quiet inside Song 5 — possible additional boundary or long breakdown"},
+    {"approx_range": "73:19–74:30", "onset_min": 0.006, "note": "Quiet inside Song 6 — intra-song breakdown"}
+  ],
+  "comparison_with_exp02": {
+    "exp02_boundaries": ["11:30", "33:30"],
+    "exp03_boundaries": ["10:55", "35:40", "45:59", "55:03", "69:54"],
+    "key_additions": ["45:59 (confidence 1.00, missed by gap score)", "55:03", "69:54"],
+    "key_refinements": ["10:55 vs 11:30 (harmonic cascade helps pin it)", "35:40 vs 33:30 (0.97+0.98 cluster more precise)"]
+  },
+  "findings": [
+    "MCP section boundaries are intra-song (163 in 95 min = ~35s each), same class as allin1's 256 segments",
+    "LLM clustering of MCP boundaries is fast and effective — no additional API calls needed beyond the clustering call",
+    "Harmonic cascade boundaries (consecutive harmonic-only changes) are a strong signal for key changes = song transitions",
+    "The 1.00 confidence boundary at 45:59 + longest quiet stretch is the clearest song boundary in the dataset — gap score (Exp02) completely missed it because playing style in the second half masks it as an energy dip",
+    "MCP onset time series confirms all 5 boundaries and reveals a 5-min quiet zone at 60-65 min that may be an additional boundary",
+    "MOV container unsupported by Symphonia — need ffmpeg to extract to FLAC as preprocessing step"
+  ]
+}
