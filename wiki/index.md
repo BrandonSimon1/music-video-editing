@@ -22,6 +22,7 @@ A separate, independent workstream: taking already-cut clips and preparing them 
 Active research threads exploring new approaches:
 
 - [LLM-Augmented Audio/Video Analysis](investigations/llm-audio-video/index.md) — replacing allin1 with fast LLM-driven analysis; path to a service
+- [Obsidian-Based Clip Approval](investigations/obsidian-clip-approval/index.md) — human review/approval of clips via the vault's ticket-style approval pattern, before captioning and upload
 
 ## Best Practices
 
