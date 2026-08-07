@@ -1,6 +1,6 @@
 # Investigation: Obsidian-Based Clip Approval
 
-**Status:** design approved-pending — not yet implemented. This doc is the spec to build against once the user signs off.
+**Status:** implemented.
 
 ## Goal
 
@@ -79,16 +79,16 @@ approved: true
 status: pending-caption
 ```
 
-### 4. Captioning script — new, in this repo
+### 4. Captioning script — `caption-overlay/caption_pending_clips.py`
 
-A script near `caption-overlay/` (not yet named/written) that:
+Run on demand (`uv run python caption-overlay/caption_pending_clips.py`) — not scheduled, since captioning is cheap/local and there's no queue to rate-limit like ticket work. Each run:
 
 1. Scans the vault for notes tagged `music-clip` with `approved == true` and `status == pending-caption`.
-2. For each, calls `caption_overlay.py add` with `--video <clip_path> --text <caption_text> --emoji <caption_emoji>`.
+2. For each, calls `add_caption_to_video()` (imported directly from `caption_overlay.py`, not shelled out) with `clip_path`/`caption_text`/`caption_emoji`.
 3. Writes the result into a new `captioned/` subfolder inside that clip's session folder (i.e. sibling to `clips/<run-name>/`, so `session-folder/clips/<run-name>/captioned/clip-001.mp4`).
 4. Sets the note's `captioned_path` to the new file's absolute path and `status: captioned`.
 
-This mirrors how `work-ticket` scans for `approved == true` + a specific `status` and picks the oldest eligible one — except this script processes the whole eligible batch per run rather than one at a time, since captioning is cheap/local (no reason to rate-limit it like ticket work).
+Processes the whole eligible batch per invocation rather than one at a time (unlike `work-ticket`, which picks a single oldest ticket) since there's no reason to serialize local ffmpeg runs.
 
 ### 5. Upload — explicitly out of scope
 
@@ -103,13 +103,14 @@ A separate process (already implemented elsewhere, not part of this repo) is exp
 | `captioned` | Captioning script | Captioned file written, awaiting upload |
 | `uploaded` | External upload process (out of scope) | Posted |
 
-## Open items for implementation (not decided here)
+## Implementation
 
-- Exact vault-path resolution mechanism for the `process_video.py` hook and the captioning script — should reuse the same dynamic `obsidian.json` lookup the `create-ticket`/`work-ticket` skills use, rather than hardcoding the vault path.
-- Note template / exact body layout beyond the video embed and frontmatter.
-- Whether the captioning script runs on demand (manually invoked) or on a schedule.
+- `obsidian-clip-approval/vault_notes.py` — shared helper module (vault-path resolution via the same dynamic `obsidian.json` lookup `create-ticket`/`work-ticket` use, frontmatter read/write, note creation, and querying for pending-caption notes). Shared rather than duplicated because both the note-creation side and the captioning-pickup side must agree on exact note shape.
+- `clip-splitting/process_video.py` — hook added after `clips.json` is written; creates one note per rendered clip via `vault_notes.create_clip_note()`. Skippable with `--no-vault-notes`.
+- `caption-overlay/caption_pending_clips.py` — the captioning script described in step 4 above.
+- `Bases/Music Clips.base` (in the vault, not this repo) — two views: "Needs approval" (`hasTag("music-clip") && approved == false`, mirrors `Needs Approval.base`) and "By status" (grouped by `status`, mirrors `Tickets - Available.base`).
 
 ## Related
 
-- [[caption-overlay]] — provides `caption_overlay.py`, the tool the captioning script wraps.
+- [[caption-overlay]] — provides `caption_overlay.py`, the tool `caption_pending_clips.py` wraps.
 - [[clip-splitting]] — the pipeline this hooks into (`process_video.py`).

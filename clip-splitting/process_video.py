@@ -33,6 +33,7 @@ from datetime import datetime
 from pathlib import Path
 
 ALGORITHMS_DIR = Path(__file__).parent / "algorithms"
+sys.path.insert(0, str(Path(__file__).parent.parent / "obsidian-clip-approval"))
 VIDEO_EXTENSIONS = {".mov", ".mp4", ".avi", ".mkv", ".mts", ".m4v"}
 
 
@@ -139,6 +140,11 @@ def main():
                        help="Parallel workers for visual filter (default: 8)")
     g_vis.add_argument("--visual-frames", type=int, default=1,
                        help="Frames per clip for majority vote (default: 1)")
+
+    # Obsidian clip-approval notes
+    g_vault = parser.add_argument_group("obsidian notes")
+    g_vault.add_argument("--no-vault-notes", action="store_true",
+                         help="Skip creating Obsidian #music-clip notes for review")
 
     # Algorithm-specific flags
     algo.add_args(parser)
@@ -279,6 +285,23 @@ def main():
     for tmp in (tmp_clips, tmp_beat_filtered, tmp_visual_filtered):
         if tmp.exists():
             tmp.unlink()
+
+    # Obsidian #music-clip notes, one per rendered clip, for human review/approval.
+    # See wiki/investigations/obsidian-clip-approval/index.md for the design.
+    if not args.no_vault_notes:
+        print("\n=== Obsidian notes ===")
+        import vault_notes
+        vault = vault_notes.resolve_vault_path()
+        for c in output["clips"]:
+            note_path = vault_notes.create_clip_note(
+                vault=vault,
+                run_name=run_dir.name,
+                clip=c,
+                clip_path=run_dir / c["filename"],
+                source_video=video_file.name,
+            )
+        print(f"Created {len(output['clips'])} notes in "
+              f"{(vault / vault_notes.NOTES_SUBDIR / run_dir.name)}")
 
     print(f"\nDone! {n_visual} clips in {run_dir.relative_to(folder)}")
     print(f"Manifest:  {clips_json_path.relative_to(folder)}")
