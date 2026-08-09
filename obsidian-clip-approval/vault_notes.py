@@ -58,19 +58,45 @@ def update_frontmatter(path: Path, updates: dict) -> None:
     write_note(path, frontmatter, body)
 
 
+def to_timecode(seconds: float) -> str:
+    """53.81 -> '00_00_53_810' (HH_MM_SS_mmm), for self-describing clip filenames."""
+    total_ms = round(seconds * 1000)
+    hours, rem_ms = divmod(total_ms, 3_600_000)
+    minutes, rem_ms = divmod(rem_ms, 60_000)
+    secs, ms = divmod(rem_ms, 1_000)
+    return f"{hours:02d}_{minutes:02d}_{secs:02d}_{ms:03d}"
+
+
+def clip_filename(start_time: float, end_time: float, ext: str = "mp4") -> str:
+    """Self-describing, collision-free (per video) clip filename from its boundaries."""
+    return f"clip-{to_timecode(start_time)}-{to_timecode(end_time)}.{ext}"
+
+
 def create_clip_note(
     vault: Path,
-    run_name: str,
+    video_folder_name: str,
     clip: dict,
     clip_path: Path,
     source_video: str,
-) -> Path:
-    """Create a #music-clip note for one rendered clip. Returns the note path."""
-    notes_dir = vault / NOTES_SUBDIR / run_name
+    analysis_path: Path | None,
+    algorithm: str,
+    algorithm_version: str,
+    params: dict,
+) -> Path | None:
+    """Create a #music-clip note for one rendered clip.
+
+    Returns the note path, or None if a note for this exact clip (same
+    video folder + filename) already exists — reruns that regenerate an
+    identical clip must not clobber a note a human may have already
+    reviewed/approved.
+    """
+    notes_dir = vault / NOTES_SUBDIR / video_folder_name
     notes_dir.mkdir(parents=True, exist_ok=True)
 
-    note_name = Path(clip["filename"]).stem  # e.g. "clip-001"
+    note_name = clip_path.stem
     note_path = notes_dir / f"{note_name}.md"
+    if note_path.exists():
+        return None
 
     frontmatter = {
         "tags": [TAG],
@@ -78,9 +104,16 @@ def create_clip_note(
         "status": "clip-created",
         "clip_path": str(clip_path.resolve()),
         "source_video": source_video,
+        "analysis_path": str(analysis_path.resolve()) if analysis_path else None,
+        "algorithm": algorithm,
+        "algorithm_version": algorithm_version,
+        "params": params,
         "start_time": clip["start_time"],
+        "end_time": clip["end_time"],
         "duration": clip["duration"],
         "segment_labels": clip.get("segment_labels", []),
+        "num_measures": clip.get("num_measures"),
+        "beat_density": clip.get("beat_density"),
         "caption_text": None,
         "caption_emoji": None,
         "captioned_path": None,

@@ -14,17 +14,41 @@ The vault already has a working approval pattern for tickets: `Tickets/*.md` not
 - No new mental model for the user — same tag+frontmatter+Base shape as tickets.
 - Clip metadata and human decisions (caption text, approval) live in a plain-text, git-independent store (the vault), separate from the repo's clip files and JSON manifests.
 
+## Folder layout
+
+Clips are **not** produced inside this git repo. `process_video.py`'s `folder` argument is meant to point at the video's real session folder — one per video, living in Google Drive under `Content/mcs/<video-folder>/` (confirmed by finding an existing session folder there whose video was byte-identical, by md5, to a copy that had been sitting in this repo for local dev). Layout:
+
+```
+Content/mcs/<video-folder>/
+  <video>.MOV
+  analysis/
+    YYYY-MM-DD-<algorithm>.json               ← raw algorithm cache (beats, downbeats, segments, BPM)
+    YYYY-MM-DD-<algorithm>_visual-cache.json   ← visual-filter resume cache (internal), named after its analysis file
+  clips/
+    clip-<start-timecode>-<end-timecode>.mp4   ← flat, one per clip, e.g. clip-00_46_56_600-00_47_27_000.mp4
+    ...
+
+Content/mcs/captioned-clips/                   ← shared, sibling to every video folder, not nested under one
+  <video-folder>_clip-<start-timecode>-<end-timecode>.mp4
+```
+
+No `clips.json` manifest — every fact about a clip (timing, segment labels, algorithm/params provenance, a link to the analysis file it came from) lives entirely in that clip's Obsidian note; the note *is* the manifest entry. This was a deliberate simplification once the note-per-clip system existed: keeping both a JSON manifest and a note per clip was duplicate bookkeeping that could drift.
+
+Clip filenames are derived from their start/end timecodes (`HH_MM_SS_mmm-HH_MM_SS_mmm`) rather than a sequential `clip-NNN` index — self-describing, and collision-free within a video without needing a run-name subfolder. This also makes reruns idempotent: regenerating the same boundaries just resolves to the same filename, so `process_video.py` skips re-rendering a clip whose file already exists, and skips creating a note if one already exists for that filename (a human may have already reviewed/approved it — a rerun must never clobber that).
+
+Captioned output goes in a *shared* `captioned-clips/` folder outside every video folder (not a subfolder of any one video's `clips/`), since uploaders only need to watch one place across all videos. Its filenames are prefixed with the source video-folder's name to stay collision-free across videos sharing this one folder.
+
 ## Design
 
 ### 1. Note creation — hook in `process_video.py`
 
-After `clips.json` is written in `process_video.py` (right after the final `clips` list and `run_dir` are known — see `render_clips_mp4` / the `output` dict construction), create one Obsidian note per rendered clip in the vault at:
+After clips are rendered in `process_video.py`, create one Obsidian note per clip in the vault at:
 
 ```
-Music Clips/<run-name>/clip-NNN.md
+Music Clips/<video-folder-name>/clip-<start-timecode>-<end-timecode>.md
 ```
 
-(`<run-name>` matches the repo's own `clips/<run-name>/` folder name, e.g. `2026-07-14-allin1`, so a note and its clip file are trivially correlated by path.)
+(Notes are grouped by video, matching the flat `clips/` folder — there's no run-name grouping anymore.)
 
 Frontmatter:
 
@@ -34,32 +58,43 @@ tags:
   - music-clip
 approved: false
 status: clip-created
-clip_path: /absolute/path/to/session-folder/clips/2026-07-14-allin1/clip-001.mp4
+clip_path: /absolute/path/to/Content/mcs/2025-10-30-mcs-practice/clips/clip-00_00_34_090-00_01_08_920.mp4
 source_video: 2025-10-30-mcs-practice.MOV
-start_time: 53.81
-duration: 33.42
-segment_labels: [verse]
+analysis_path: /absolute/path/to/Content/mcs/2025-10-30-mcs-practice/analysis/2026-06-23-allin1.json
+algorithm: allin1
+algorithm_version: harmonix-all
+params:
+  beat_density_min: 1.2
+  beat_cv_max: 0.25
+  visual_filter_model: claude-haiku-4-5
+start_time: 34.09
+end_time: 68.92
+duration: 34.83
+segment_labels: [intro]
+num_measures: 12
+beat_density: 1.378
 caption_text:
 caption_emoji:
 captioned_path:
 ---
 ```
 
-- `clip_path` is an absolute filesystem path (not copied/symlinked into the vault — see "Video preview" below).
+- `clip_path` and `analysis_path` are absolute filesystem paths (not copied/symlinked into the vault — see "Video preview" below).
 - `caption_text` / `caption_emoji` / `captioned_path` start blank and are filled in later (by the human during review, and by the captioning script respectively).
 - `status` starts at `clip-created` and is the single source of truth for pipeline stage — kept independent of `approved` exactly like tickets separate `status` from `approved`.
+- `algorithm` / `algorithm_version` / `params` replace what used to be top-level fields in `clips.json` — now per-note since there's no manifest to hold them once.
 
 Body: a heading with the clip name, key facts (source video, timing, segment label) as plain text, and a video embed (see below) for review.
 
 ### 2. Video preview — plain file link, no copy/symlink into the vault
 
-The vault lives under Google Drive (`~/Google Drive/obsidian/vault-1/`), so copying or symlinking every clip into it would push every clip's bytes through Drive sync — rejected. Instead, embed the clip directly from its repo-local path with a raw HTML5 video tag in the note body:
+The vault lives under Google Drive (`~/Google Drive/obsidian/vault-1/`), same as the clips themselves (`Content/mcs/`) — but they're different Drive folders, and copying or symlinking every clip into the vault folder specifically would still push every clip's bytes through an extra round of Drive sync — rejected. Instead, embed the clip directly from its real path with a raw HTML5 video tag in the note body:
 
 ```html
-<video src="file:///Users/.../clips/2026-07-14-allin1/clip-001.mp4" controls></video>
+<video src="file:///Users/.../Content/mcs/2025-10-30-mcs-practice/clips/clip-00_00_34_090-00_01_08_920.mp4" controls></video>
 ```
 
-Obsidian renders raw HTML in notes and Electron's `file://` protocol can load local media directly, so this plays inline without touching the vault's synced storage.
+Obsidian renders raw HTML in notes and Electron's `file://` protocol can load local media directly, so this plays inline without any extra copying.
 
 ### 3. Review — human step, no new tooling
 
@@ -85,7 +120,7 @@ Run on demand (`uv run python caption-overlay/caption_pending_clips.py`) — not
 
 1. Scans the vault for notes tagged `music-clip` with `approved == true` and `status == pending-caption`.
 2. For each, calls `add_caption_to_video()` (imported directly from `caption_overlay.py`, not shelled out) with `clip_path`/`caption_text`/`caption_emoji`.
-3. Writes the result into a new `captioned/` subfolder inside that clip's session folder (i.e. sibling to `clips/<run-name>/`, so `session-folder/clips/<run-name>/captioned/clip-001.mp4`).
+3. Writes the result into the shared `captioned-clips/` folder (a sibling of every video folder, derived from `clip_path` as `clip_path.parent.parent.parent / "captioned-clips"`), named `<video-folder>_<clip-filename>` for cross-video uniqueness.
 4. Sets the note's `captioned_path` to the new file's absolute path and `status: captioned`.
 
 Processes the whole eligible batch per invocation rather than one at a time (unlike `work-ticket`, which picks a single oldest ticket) since there's no reason to serialize local ffmpeg runs.
@@ -105,10 +140,12 @@ A separate process (already implemented elsewhere, not part of this repo) is exp
 
 ## Implementation
 
-- `obsidian-clip-approval/vault_notes.py` — shared helper module (vault-path resolution via the same dynamic `obsidian.json` lookup `create-ticket`/`work-ticket` use, frontmatter read/write, note creation, and querying for pending-caption notes). Shared rather than duplicated because both the note-creation side and the captioning-pickup side must agree on exact note shape.
-- `clip-splitting/process_video.py` — hook added after `clips.json` is written; creates one note per rendered clip via `vault_notes.create_clip_note()`. Skippable with `--no-vault-notes`.
-- `caption-overlay/caption_pending_clips.py` — the captioning script described in step 4 above.
+- `obsidian-clip-approval/vault_notes.py` — shared helper module: vault-path resolution (same dynamic `obsidian.json` lookup `create-ticket`/`work-ticket` use), frontmatter read/write, timecode filename generation (`to_timecode` / `clip_filename`), note creation, and querying for pending-caption notes. Shared rather than duplicated because both the note-creation side and the captioning-pickup side must agree on exact note shape and filename convention.
+- `clip-splitting/process_video.py` — renders clips flat into `<folder>/clips/`, then creates one note per clip via `vault_notes.create_clip_note()`. Skippable with `--no-vault-notes`. No `clips.json` is written.
+- `caption-overlay/caption_pending_clips.py` — the captioning script described in step 4 above; writes into the shared `captioned-clips/` folder.
 - `Bases/Music Clips.base` (in the vault, not this repo) — two views: "Needs approval" (`hasTag("music-clip") && approved == false`, mirrors `Needs Approval.base`) and "By status" (grouped by `status`, mirrors `Tickets - Available.base`).
+
+**Revision note:** the first implementation nested clips under `clips/<run-name>/` with a `clips.json` manifest, mirroring the run-oriented layout `process_video.py` already had. After building the note system, that turned out to be redundant — the note already carries everything the manifest did — so it was flattened to `clips/` with timecode-named files and no manifest, as described above. This also surfaced that `process_video.py` was never actually pointed at the real per-video folders in Google Drive; a one-off script migrated an existing legacy render (pre-dating `process_video.py` entirely) into this layout to backfill notes for it.
 
 ## Related
 

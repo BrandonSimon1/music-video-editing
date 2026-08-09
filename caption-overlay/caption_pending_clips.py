@@ -3,10 +3,11 @@
 Scans for #music-clip notes with `approved: true` and `status: pending-caption`
 (set by the human during review — see
 wiki/investigations/obsidian-clip-approval/index.md), runs caption_overlay.py
-on each, writes the result into a `captioned/` folder next to the source
-clip's `clips/<run-name>/` folder, and updates the note with the captioned
-file's path and `status: captioned`. Upload (status: uploaded) is a separate,
-out-of-scope process that picks up from there.
+on each, and writes the result into a shared `captioned-clips/` folder that
+sits alongside all the per-video session folders (not nested under any one
+video), so uploaders only need to watch one place. Updates the note with the
+captioned file's path and `status: captioned`. Upload (status: uploaded) is a
+separate, out-of-scope process that picks up from there.
 
 Usage:
     uv run python caption-overlay/caption_pending_clips.py
@@ -37,11 +38,14 @@ def caption_pending_clips() -> int:
             print(f"Skipping {note_path.name}: approved but caption_text is blank")
             continue
 
-        # captioned/ is a sibling of the clip's clips/<run-name>/ folder,
-        # i.e. session-folder/clips/<run-name>/captioned/
-        captioned_dir = clip_path.parent / "captioned"
+        # clip_path is <mcs-root>/<video-folder>/clips/clip-....mp4. The
+        # video-folder name prefixes the output filename so clips from
+        # different videos can't collide in the shared captioned-clips/ dir.
+        video_folder = clip_path.parent.parent
+        mcs_root = video_folder.parent
+        captioned_dir = mcs_root / "captioned-clips"
         captioned_dir.mkdir(exist_ok=True)
-        captioned_path = captioned_dir / clip_path.name
+        captioned_path = captioned_dir / f"{video_folder.name}_{clip_path.name}"
 
         print(f"Captioning {clip_path.name}: \"{text}\" {frontmatter.get('caption_emoji') or ''}")
         add_caption_to_video(
