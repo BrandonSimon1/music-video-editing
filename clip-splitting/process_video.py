@@ -6,14 +6,19 @@ Folder layout produced:
   <folder>/
     <video>.MOV
     analysis/
-      YYYY-MM-DD-<algorithm>.json   ← algorithm cache (if the algorithm uses one)
+      YYYY-MM-DD-<algorithm>.json               ← algorithm cache (if the algorithm uses one)
+      YYYY-MM-DD-<algorithm>_visual-cache.json   ← resume cache for visual filter (internal)
     clips/
-      YYYY-MM-DD-<algorithm>/
-        clips.json                  ← algorithm, params, summary, clip timings
-        _visual_cache.json          ← resume cache for visual filter (internal)
-        clip-001.mp4
-        clip-002.mp4
-        ...
+      clip-<start-timecode>-<end-timecode>.mp4   ← flat, one per clip, self-naming
+      ...
+
+No clips.json manifest — every clip's metadata (timing, segment labels,
+algorithm/params provenance, an analysis_path link) lives entirely in its
+Obsidian #music-clip note. See wiki/investigations/obsidian-clip-approval/.
+
+Reruns are idempotent: a clip whose timecode-derived filename already exists
+is not re-rendered, and a note that already exists for that filename is not
+overwritten (it may already be reviewed/approved by a human).
 
 Adding a new algorithm:
   1. Create clip-splitting/algorithms/<name>.py
@@ -29,11 +34,14 @@ import importlib
 import json
 import subprocess
 import sys
-from datetime import datetime
+import tempfile
+from datetime import date
 from pathlib import Path
 
 ALGORITHMS_DIR = Path(__file__).parent / "algorithms"
 sys.path.insert(0, str(Path(__file__).parent.parent / "obsidian-clip-approval"))
+import vault_notes
+
 VIDEO_EXTENSIONS = {".mov", ".mp4", ".avi", ".mkv", ".mts", ".m4v"}
 
 
@@ -75,20 +83,22 @@ def load_algorithm(name: str):
     return mod
 
 
-def make_run_dir(clips_dir: Path, run_name: str) -> Path:
-    candidate = clips_dir / run_name
-    if not candidate.exists():
-        return candidate
-    n = 2
-    while (clips_dir / f"{run_name}-{n}").exists():
-        n += 1
-    return clips_dir / f"{run_name}-{n}"
+def render_clips_mp4(clips: list, video_file: Path, output_dir: Path) -> dict[int, Path]:
+    """Render each clip to <output_dir>/clip-<start-timecode>-<end-timecode>.mp4.
 
-
-def render_clips_mp4(clips: list, video_file: Path, output_dir: Path):
+    Skips clips whose file already exists (idempotent reruns). Returns a map
+    of the clip's index in `clips` to its rendered path, for every clip
+    (freshly rendered or already present) — callers need the path either way.
+    """
     output_dir.mkdir(parents=True, exist_ok=True)
-    for i, clip in enumerate(clips, 1):
-        outfile = output_dir / f"clip-{i:03d}.mp4"
+    paths = {}
+    n_rendered = 0
+    for i, clip in enumerate(clips):
+        filename = vault_notes.clip_filename(clip["start_time"], clip["end_time"])
+        outfile = output_dir / filename
+        paths[i] = outfile
+        if outfile.exists():
+            continue
         cmd = [
             "ffmpeg",
             "-ss", str(clip["start_time"]),
@@ -98,9 +108,11 @@ def render_clips_mp4(clips: list, video_file: Path, output_dir: Path):
             "-avoid_negative_ts", "make_zero",
             "-y", str(outfile),
         ]
-        print(f"  {i:3d}: {clip['start_time']:7.2f}s  ({clip['duration']:5.2f}s) → {outfile.name}")
+        print(f"  {clip['start_time']:7.2f}s  ({clip['duration']:5.2f}s) → {outfile.name}")
         subprocess.run(cmd, capture_output=True, check=True)
-    print(f"Rendered {len(clips)} clips to {output_dir}")
+        n_rendered += 1
+    print(f"Rendered {n_rendered} new clips ({len(clips) - n_rendered} already present) in {output_dir}")
+    return paths
 
 
 def main():
@@ -119,7 +131,6 @@ def main():
     parser.add_argument("--algorithm", default="allin1",
                         help="Algorithm to use (default: allin1)")
     parser.add_argument("--video", help="Video filename (if folder has multiple videos)")
-    parser.add_argument("--name", help="Override run folder name (default: YYYY-MM-DD-<algorithm>)")
 
     # Beat filter (skipped automatically if clips lack beat_density)
     g_beat = parser.add_argument_group("beat filter")
@@ -172,75 +183,74 @@ def main():
     n_built = len(clips)
     print(f"Got {n_built} clips from algorithm")
 
-    # Set up run dir
-    today = datetime.now().date().isoformat()
-    run_name = args.name or f"{today}-{algo.ALGORITHM_NAME}"
-    run_dir = make_run_dir(folder / "clips", run_name)
-    run_dir.mkdir(parents=True)
-    print(f"Run dir:   {run_dir.relative_to(folder)}")
+    # Find the analysis file the algorithm used/created, the same way it does
+    # internally (most recent *-<algorithm>.json in cache_dir) — algorithms
+    # don't return this directly, so we rediscover it for the note's
+    # analysis_path link and to name the visual-filter cache after it.
+    analysis_candidates = sorted(cache_dir.glob(f"*-{algo.ALGORITHM_NAME}.json"), reverse=True)
+    analysis_path = analysis_candidates[0] if analysis_candidates else None
+    cache_stem = analysis_path.stem if analysis_path else f"{date.today().isoformat()}-{algo.ALGORITHM_NAME}"
 
-    # Temp files for filter stages
-    tmp_clips = run_dir / "_clips.json"
-    tmp_beat_filtered = run_dir / "_beat_filtered.json"
-    tmp_visual_filtered = run_dir / "_visual_filtered.json"
-    visual_cache = run_dir / "_visual_cache.json"
+    clips_dir = folder / "clips"
+    clips_dir.mkdir(exist_ok=True)
 
-    # Write raw clips to temp file (filter functions expect JSON on disk)
-    with open(tmp_clips, "w") as f:
-        json.dump({"clips": clips, "num_clips": len(clips)}, f)
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        tmp_clips = tmp / "_clips.json"
+        tmp_beat_filtered = tmp / "_beat_filtered.json"
+        tmp_visual_filtered = tmp / "_visual_filtered.json"
+        visual_cache = cache_dir / f"{cache_stem}_visual-cache.json"
 
-    # Beat filter (skip if clips lack the metrics or --no-beat-filter)
-    has_beat_metrics = clips and "beat_density" in clips[0]
-    n_beat = n_built
+        # Write raw clips to temp file (filter functions expect JSON on disk)
+        with open(tmp_clips, "w") as f:
+            json.dump({"clips": clips, "num_clips": len(clips)}, f)
 
-    if not args.no_beat_filter and has_beat_metrics:
-        print("\n=== Beat filter ===")
-        sys.path.insert(0, str(Path(__file__).parent))
-        from allin1_clip_extractor import filter_clips
-        beat_data = filter_clips(
-            str(tmp_clips),
-            output_json=str(tmp_beat_filtered),
-            min_beat_density=args.min_beat_density,
-            max_beat_cv=args.max_beat_cv,
-        )
-        n_beat = len(beat_data["clips"])
-        current_json = tmp_beat_filtered
-    else:
-        if not has_beat_metrics and not args.no_beat_filter:
-            print("\n(Beat filter skipped — algorithm did not provide beat_density metrics)")
-        current_json = tmp_clips
+        # Beat filter (skip if clips lack the metrics or --no-beat-filter)
+        has_beat_metrics = clips and "beat_density" in clips[0]
+        n_beat = n_built
 
-    # Visual filter
-    n_visual = n_beat
-    if not args.no_visual_filter:
-        print("\n=== Visual filter ===")
-        from allin1_clip_extractor import visual_filter_clips
-        visual_data = visual_filter_clips(
-            str(current_json),
-            str(video_file),
-            output_json=str(tmp_visual_filtered),
-            model=args.visual_model,
-            workers=args.visual_workers,
-            frames=args.visual_frames,
-            cache_file=str(visual_cache),
-        )
-        n_visual = len(visual_data["clips"])
-        final_clips = visual_data["clips"]
-    else:
-        with open(current_json) as f:
-            final_clips = json.load(f)["clips"]
+        if not args.no_beat_filter and has_beat_metrics:
+            print("\n=== Beat filter ===")
+            sys.path.insert(0, str(Path(__file__).parent))
+            from allin1_clip_extractor import filter_clips
+            beat_data = filter_clips(
+                str(tmp_clips),
+                output_json=str(tmp_beat_filtered),
+                min_beat_density=args.min_beat_density,
+                max_beat_cv=args.max_beat_cv,
+            )
+            n_beat = len(beat_data["clips"])
+            current_json = tmp_beat_filtered
+        else:
+            if not has_beat_metrics and not args.no_beat_filter:
+                print("\n(Beat filter skipped — algorithm did not provide beat_density metrics)")
+            current_json = tmp_clips
 
-    # Render
+        # Visual filter
+        n_visual = n_beat
+        if not args.no_visual_filter:
+            print("\n=== Visual filter ===")
+            from allin1_clip_extractor import visual_filter_clips
+            visual_data = visual_filter_clips(
+                str(current_json),
+                str(video_file),
+                output_json=str(tmp_visual_filtered),
+                model=args.visual_model,
+                workers=args.visual_workers,
+                frames=args.visual_frames,
+                cache_file=str(visual_cache),
+            )
+            n_visual = len(visual_data["clips"])
+            final_clips = visual_data["clips"]
+        else:
+            with open(current_json) as f:
+                final_clips = json.load(f)["clips"]
+
+    # Render (flat clips/, timecode-named, idempotent)
     print("\n=== Render ===")
-    render_clips_mp4(final_clips, video_file, run_dir)
+    clip_paths = render_clips_mp4(final_clips, video_file, clips_dir)
 
-    # Write clips.json
-    summary = {"built": n_built, "rendered": n_visual}
-    if not args.no_beat_filter and has_beat_metrics:
-        summary["after_beat_filter"] = n_beat
-    if not args.no_visual_filter:
-        summary["after_visual_filter"] = n_visual
-
+    # Params, for provenance on each note (no clips.json anymore)
     params = {
         "beat_filter": not args.no_beat_filter and has_beat_metrics,
         "visual_filter": not args.no_visual_filter,
@@ -252,59 +262,33 @@ def main():
         params["visual_filter_model"] = args.visual_model
         params["visual_filter_frames"] = args.visual_frames
         params["visual_filter_workers"] = args.visual_workers
-
-    # Merge in algorithm-specific params (anything the algorithm put on args)
     algo_params = algo.get_params(args) if hasattr(algo, "get_params") else {}
     params.update(algo_params)
 
-    output = {
-        "algorithm": algo.ALGORITHM_NAME,
-        "algorithm_version": algo.ALGORITHM_VERSION,
-        "processed_at": datetime.now().isoformat(timespec="seconds"),
-        "video_file": video_file.name,
-        "params": params,
-        "summary": summary,
-        "clips": [
-            {
-                "filename": f"clip-{i:03d}.mp4",
-                "start_time": c["start_time"],
-                "end_time": c["end_time"],
-                "duration": c["duration"],
-                **{k: c[k] for k in ("num_measures", "beat_density", "segment_labels")
-                   if k in c},
-            }
-            for i, c in enumerate(final_clips, 1)
-        ],
-    }
-
-    clips_json_path = run_dir / "clips.json"
-    with open(clips_json_path, "w") as f:
-        json.dump(output, f, indent=2)
-
-    # Clean up intermediates (keep visual cache for resume)
-    for tmp in (tmp_clips, tmp_beat_filtered, tmp_visual_filtered):
-        if tmp.exists():
-            tmp.unlink()
-
     # Obsidian #music-clip notes, one per rendered clip, for human review/approval.
     # See wiki/investigations/obsidian-clip-approval/index.md for the design.
+    n_notes = 0
     if not args.no_vault_notes:
         print("\n=== Obsidian notes ===")
-        import vault_notes
         vault = vault_notes.resolve_vault_path()
-        for c in output["clips"]:
+        for i, c in enumerate(final_clips):
             note_path = vault_notes.create_clip_note(
                 vault=vault,
-                run_name=run_dir.name,
+                video_folder_name=folder.name,
                 clip=c,
-                clip_path=run_dir / c["filename"],
+                clip_path=clip_paths[i],
                 source_video=video_file.name,
+                analysis_path=analysis_path,
+                algorithm=algo.ALGORITHM_NAME,
+                algorithm_version=algo.ALGORITHM_VERSION,
+                params=params,
             )
-        print(f"Created {len(output['clips'])} notes in "
-              f"{(vault / vault_notes.NOTES_SUBDIR / run_dir.name)}")
+            if note_path is not None:
+                n_notes += 1
+        print(f"Created {n_notes} new notes ({len(final_clips) - n_notes} already existed) in "
+              f"{vault / vault_notes.NOTES_SUBDIR / folder.name}")
 
-    print(f"\nDone! {n_visual} clips in {run_dir.relative_to(folder)}")
-    print(f"Manifest:  {clips_json_path.relative_to(folder)}")
+    print(f"\nDone! {n_visual} clips in {clips_dir.relative_to(folder)}")
 
 
 if __name__ == "__main__":
