@@ -1,7 +1,0 @@
-# Caption Overlay: Lessons Learned
-
-- **Apple Color Emoji only rasterizes at fixed pixel sizes** (160, 96, 64, 48, 32, 20 observed). Requesting `ImageFont.truetype(..., size)` at an arbitrary size raises `OSError: invalid pixel size`. Fix: render at the nearest supported size ≥ target, crop to the glyph's bbox, then resize with Pillow (`LANCZOS`) to the exact size needed. This generalizes to any use of macOS's color emoji font, not just captions.
-- **`embedded_color=True` is required** on `ImageDraw.text` to get color emoji glyphs at all — without it Pillow falls back to (missing) monochrome glyphs from the font.
-- **Two-stage render (Pillow PNG → ffmpeg overlay) beats one-stage moviepy** for this repo: moviepy's `TextClip` needs ImageMagick, an extra system dependency not otherwise used here. ffmpeg + Pillow are already proven elsewhere in the codebase ([[clip-splitting]] rendering, wiki visualizations).
-- **Size captions relative to video width**, not a fixed pixel font size — a caption tuned for a 1080px-wide vertical clip looks oversized/undersized on differently-sized sources. Scaling `font_size` by `video_width / 1080` keeps the pill proportionally consistent.
-- **`ffprobe`'s `image2` muxer warning is a red herring** when extracting a single preview frame without `-update 1`: it still writes the file successfully despite printing "does not contain an image sequence pattern". Worth remembering when scripting frame-extraction checks so it isn't mistaken for a real failure.
