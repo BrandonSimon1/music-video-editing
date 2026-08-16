@@ -34,6 +34,14 @@ SHADOW_BLUR_MARGIN = 16
 SHADOW_OFFSET = (0, 4)
 SHADOW_OPACITY = 60  # 0-255
 
+# The rendered caption pill (text + emoji + padding) should never exceed
+# this fraction of the video's width — font size adapts per-caption to fit.
+MAX_CONTENT_WIDTH_RATIO = 0.70
+MIN_FONT_SIZE = 10
+MAX_FONT_SIZE = 200
+# Caption vertical center target, as a fraction of frame height from the top.
+VERTICAL_POSITION_RATIO = 0.75
+
 
 def _load_emoji(emoji: str, target_size: int) -> Image.Image:
     render_size = min((s for s in EMOJI_SUPPORTED_SIZES if s >= target_size),
@@ -49,6 +57,53 @@ def _load_emoji(emoji: str, target_size: int) -> Image.Image:
     scale = target_size / max(glyph.size)
     new_size = (max(1, int(glyph.width * scale)), max(1, int(glyph.height * scale)))
     return glyph.resize(new_size, Image.LANCZOS)
+
+
+def _content_width(text: str, emoji: str | None, font_size: int, draw: ImageDraw.ImageDraw) -> int:
+    """Approximate the rendered pill width (text + optional emoji + gap +
+    horizontal padding) at a given font size — i.e. what's actually visible
+    on screen, matching how render_caption_image lays things out."""
+    font = ImageFont.truetype(FONT_BOLD, font_size)
+    bbox = draw.textbbox((0, 0), text, font=font)
+    width = bbox[2] - bbox[0]
+    if emoji:
+        emoji_size = int(font_size * 1.0)
+        emoji_gap = int(font_size * 0.35)
+        width += emoji_gap + emoji_size
+    return width + 2 * PADDING_X
+
+
+def fit_font_size(
+    text: str,
+    emoji: str | None,
+    video_width: int,
+    base_font_size: int,
+    max_width_ratio: float = MAX_CONTENT_WIDTH_RATIO,
+) -> int:
+    """Pick a font size so the rendered caption content stays within
+    ``max_width_ratio`` of ``video_width``, shrinking or growing from
+    ``base_font_size`` as needed.
+    """
+    max_width = video_width * max_width_ratio
+    scratch = Image.new("RGBA", (10, 10))
+    draw = ImageDraw.Draw(scratch)
+
+    width = _content_width(text, emoji, base_font_size, draw)
+    if width <= 0:
+        return base_font_size
+
+    # Linear estimate first (font metrics scale ~linearly with size), then
+    # step to the exact boundary since the relationship isn't perfectly
+    # linear (hinting, emoji fixed raster sizes, etc).
+    font_size = max(MIN_FONT_SIZE, min(MAX_FONT_SIZE, int(base_font_size * max_width / width)))
+
+    while font_size > MIN_FONT_SIZE and _content_width(text, emoji, font_size, draw) > max_width:
+        font_size -= 1
+    while (font_size < MAX_FONT_SIZE
+           and _content_width(text, emoji, font_size + 1, draw) <= max_width):
+        font_size += 1
+
+    return font_size
 
 
 def render_caption_image(text: str, emoji: str | None, font_size: int = 44) -> Image.Image:
@@ -133,26 +188,35 @@ def add_caption_to_video(
     output_path: Path,
     start: float = 0.0,
     duration: float | None = None,
-    top_margin_ratio: float = 0.06,
+    vertical_position_ratio: float = VERTICAL_POSITION_RATIO,
     font_size: int = 44,
 ) -> None:
     info = _probe_video(video_path)
     video_w = int(info["width"])
+    video_h = int(info["height"])
 
     # Scale font/pill size relative to video width so captions look consistent
-    # across differently-sized source clips (reference target: 1080px wide).
+    # across differently-sized source clips (reference target: 1080px wide),
+    # then adapt per-caption so the rendered content never exceeds
+    # MAX_CONTENT_WIDTH_RATIO of the video's width.
     scale = video_w / 1080
-    caption_img = render_caption_image(text, emoji, font_size=int(font_size * scale))
+    base_font_size = int(font_size * scale)
+    adaptive_font_size = fit_font_size(text, emoji, video_w, base_font_size)
+    caption_img = render_caption_image(text, emoji, font_size=adaptive_font_size)
 
     overlay_path = output_path.with_suffix(".caption.png")
     caption_img.save(overlay_path)
 
-    top_margin = int(int(info["height"]) * top_margin_ratio)
+    # Center the caption at vertical_position_ratio of the frame height,
+    # clamped so it never renders off the top or bottom edge.
+    target_center_y = video_h * vertical_position_ratio
+    top = int(target_center_y - caption_img.height / 2)
+    top = max(0, min(top, video_h - caption_img.height))
     enable_expr = f"between(t,{start},{start + duration})" if duration else "1"
 
     filter_complex = (
         f"[1:v]format=rgba[ovl];"
-        f"[0:v][ovl]overlay=x=(W-w)/2:y={top_margin}:enable='{enable_expr}'"
+        f"[0:v][ovl]overlay=x=(W-w)/2:y={top}:enable='{enable_expr}'"
     )
 
     cmd = [
