@@ -40,7 +40,11 @@ MAX_CONTENT_WIDTH_RATIO = 0.70
 MIN_FONT_SIZE = 10
 MAX_FONT_SIZE = 200
 # Caption vertical center target, as a fraction of frame height from the top.
-VERTICAL_POSITION_RATIO = 0.75
+# (Placed near the top of the frame: 0.25 mirrors the previous 0.75-from-top
+# placement across the frame's vertical midpoint, matching feedback that the
+# caption should sit near the top with the same magnitude of margin it
+# previously had from the bottom.)
+VERTICAL_POSITION_RATIO = 0.25
 
 
 def _load_emoji(emoji: str, target_size: int) -> Image.Image:
