@@ -172,13 +172,31 @@ def render_caption_image(text: str, emoji: str | None, font_size: int = 44) -> I
 
 
 def _probe_video(video_path: Path) -> dict:
+    """Probe the video's coded dimensions plus rotation metadata, and return
+    the *display* width/height — i.e. what ffmpeg's filtergraph actually
+    outputs once it auto-applies any rotation (common for phone-shot
+    portrait clips, which are frequently coded landscape with a 90/270
+    degree rotation tag). Callers must position overlays against these
+    display dimensions, not the raw coded ones, or a rotated clip's captions
+    end up sized/placed for the wrong orientation entirely."""
     result = subprocess.run(
         ["ffprobe", "-v", "error", "-select_streams", "v:0",
-         "-show_entries", "stream=width,height,duration",
+         "-show_entries", "stream=width,height,duration:stream_side_data=rotation",
          "-of", "json", str(video_path)],
         capture_output=True, text=True, check=True,
     )
-    return json.loads(result.stdout)["streams"][0]
+    stream = json.loads(result.stdout)["streams"][0]
+
+    rotation = 0
+    for side_data in stream.get("side_data_list", []):
+        if "rotation" in side_data:
+            rotation = int(side_data["rotation"])
+            break
+
+    if rotation % 180 != 0:
+        stream["width"], stream["height"] = stream["height"], stream["width"]
+
+    return stream
 
 
 def add_caption_to_video(
