@@ -6,8 +6,12 @@ wiki/investigations/obsidian-clip-approval/index.md), runs caption_overlay.py
 on each, and writes the result into a shared `captioned-clips/` folder that
 sits alongside all the per-video session folders (not nested under any one
 video), so uploaders only need to watch one place. Updates the note with the
-captioned file's path and `status: captioned`. Upload (status: uploaded) is a
-separate, out-of-scope process that picks up from there.
+captioned file's path and `status: captioned`, and appends a second video
+embed to the note body ("Captioned Preview") so the captioned output can be
+checked for caption placement/sizing/timing right from the vault, alongside
+the original clip embed, before it gets uploaded anywhere. Upload
+(status: uploaded) is a separate, out-of-scope process that picks up from
+there.
 
 Usage:
     uv run python caption-overlay/caption_pending_clips.py
@@ -59,7 +63,8 @@ def caption_pending_clips() -> int:
             "captioned_path": str(captioned_path.resolve()),
             "status": "captioned",
         })
-        print(f"  -> {captioned_path} (note updated: status=captioned)")
+        vault_notes.append_video_embed(note_path, "Captioned Preview", captioned_path)
+        print(f"  -> {captioned_path} (note updated: status=captioned, captioned preview embedded)")
 
     return len(pending)
 
