@@ -132,6 +132,23 @@ def create_clip_note(
     return note_path
 
 
+def append_video_embed(path: Path, heading: str, video_path: Path) -> None:
+    """Append a labeled HTML5 video embed to a note's body.
+
+    Used to add the captioned-output preview below the original clip embed
+    already in the note (see create_clip_note), so both the source clip and
+    the captioned result are reviewable from the same note — same `file://`,
+    no-copy-into-vault convention as the original embed.
+    """
+    frontmatter, body = read_note(path)
+    body = (
+        body.rstrip("\n")
+        + f"\n\n## {heading}\n\n"
+        + f'<video src="file://{video_path.resolve()}" controls></video>\n'
+    )
+    write_note(path, frontmatter, body)
+
+
 def find_notes(vault: Path, tag: str = TAG) -> list[Path]:
     """All notes under Music Clips/ carrying the given tag."""
     notes_dir = vault / NOTES_SUBDIR
