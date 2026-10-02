@@ -2,8 +2,9 @@
 
 Used by both the clip-splitting pipeline (which creates one note per
 rendered clip) and the caption-overlay pickup script (which scans for
-approved notes and updates them). Kept as a small shared module rather
-than duplicated in each workstream so the two stay in sync on note shape.
+approved notes — those without the `needs-approval` tag — and updates
+them). Kept as a small shared module rather than duplicated in each
+workstream so the two stay in sync on note shape.
 
 See wiki/investigations/obsidian-clip-approval/index.md for the full design.
 """
@@ -17,6 +18,7 @@ import yaml
 
 NOTES_SUBDIR = "Music Clips"
 TAG = "music-clip"
+NEEDS_APPROVAL_TAG = "needs-approval"
 
 FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n(.*)\Z", re.DOTALL)
 
@@ -99,8 +101,7 @@ def create_clip_note(
         return None
 
     frontmatter = {
-        "tags": [TAG],
-        "approved": False,
+        "tags": [TAG, NEEDS_APPROVAL_TAG],
         "status": "clip-created",
         "clip_path": str(clip_path.resolve()),
         "source_video": source_video,
@@ -163,10 +164,11 @@ def find_notes(vault: Path, tag: str = TAG) -> list[Path]:
 
 
 def find_pending_caption_notes(vault: Path) -> list[tuple[Path, dict]]:
-    """(path, frontmatter) for notes approved and waiting to be captioned."""
+    """(path, frontmatter) for notes approved (no `needs-approval` tag) and waiting to be captioned."""
     results = []
     for path in find_notes(vault):
         frontmatter, _ = read_note(path)
-        if frontmatter.get("approved") is True and frontmatter.get("status") == "pending-caption":
+        tags = frontmatter.get("tags") or []
+        if NEEDS_APPROVAL_TAG not in tags and frontmatter.get("status") == "pending-caption":
             results.append((path, frontmatter))
     return results
