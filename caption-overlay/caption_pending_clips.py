@@ -1,6 +1,7 @@
 """Caption every approved, pending clip found in the Obsidian vault.
 
-Scans for #music-clip notes with `approved: true` and `status: pending-caption`
+Scans for #music-clip notes without the `needs-approval` tag and with
+`status: pending-caption`
 (set by the human during review — see
 wiki/investigations/obsidian-clip-approval/index.md), runs caption_overlay.py
 on each, and writes the result into a shared `captioned-clips/` folder that
@@ -39,7 +40,7 @@ def caption_pending_clips() -> int:
         clip_path = Path(frontmatter["clip_path"])
         text = frontmatter.get("caption_text")
         if not text:
-            print(f"Skipping {note_path.name}: approved but caption_text is blank")
+            print(f"Skipping {note_path.name}: approved (needs-approval tag removed) but caption_text is blank")
             continue
 
         # clip_path is <mcs-root>/<video-folder>/clips/clip-....mp4. The
