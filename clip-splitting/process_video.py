@@ -41,6 +41,7 @@ from pathlib import Path
 ALGORITHMS_DIR = Path(__file__).parent / "algorithms"
 sys.path.insert(0, str(Path(__file__).parent.parent / "obsidian-clip-approval"))
 import vault_notes
+from drive_links import DriveResolver, try_view_url
 
 VIDEO_EXTENSIONS = {".mov", ".mp4", ".avi", ".mkv", ".mts", ".m4v"}
 
@@ -271,7 +272,13 @@ def main():
     if not args.no_vault_notes:
         print("\n=== Obsidian notes ===")
         vault = vault_notes.resolve_vault_path()
+        resolver = DriveResolver()
+        n_unlinked = 0
         for i, c in enumerate(final_clips):
+            # Google Drive link for the clip (TKT-139). A just-rendered clip
+            # usually hasn't synced yet, so this is often blank; the
+            # captioning job and backfill_drive_links.py fill it in later.
+            clip_drive_url, _ = try_view_url(clip_paths[i], resolver)
             note_path = vault_notes.create_clip_note(
                 vault=vault,
                 video_folder_name=folder.name,
@@ -282,11 +289,16 @@ def main():
                 algorithm=algo.ALGORITHM_NAME,
                 algorithm_version=algo.ALGORITHM_VERSION,
                 params=params,
+                clip_drive_url=clip_drive_url,
             )
             if note_path is not None:
                 n_notes += 1
+                n_unlinked += clip_drive_url is None
         print(f"Created {n_notes} new notes ({len(final_clips) - n_notes} already existed) in "
               f"{vault / vault_notes.NOTES_SUBDIR / folder.name}")
+        if n_unlinked:
+            print(f"{n_unlinked} new note(s) have no Google Drive link yet (clip not synced to "
+                  "Drive yet); run obsidian-clip-approval/backfill_drive_links.py once it has")
 
     print(f"\nDone! {n_visual} clips in {clips_dir.relative_to(folder)}")
 

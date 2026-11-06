@@ -20,6 +20,18 @@ NOTES_SUBDIR = "Music Clips"
 TAG = "music-clip"
 NEEDS_APPROVAL_TAG = "needs-approval"
 
+# Google Drive links (TKT-139). `clip_path` / `captioned_path` stay local
+# paths (the captioning and upload jobs read them); these fields carry each
+# file's Drive link next to them, so the note works off this Mac too. Blank
+# until the file has synced to Drive; backfill_drive_links.py fills them in.
+CLIP_DRIVE_FIELD = "clip_drive_url"
+CAPTIONED_DRIVE_FIELD = "captioned_drive_url"
+# frontmatter path field -> (Drive link field, body link text)
+DRIVE_LINK_FIELDS = {
+    "clip_path": (CLIP_DRIVE_FIELD, "Open original in Google Drive"),
+    "captioned_path": (CAPTIONED_DRIVE_FIELD, "Open captioned clip in Google Drive"),
+}
+
 FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n(.*)\Z", re.DOTALL)
 
 
@@ -84,6 +96,7 @@ def create_clip_note(
     algorithm: str,
     algorithm_version: str,
     params: dict,
+    clip_drive_url: str | None = None,
 ) -> Path | None:
     """Create a #music-clip note for one rendered clip.
 
@@ -91,6 +104,10 @@ def create_clip_note(
     video folder + filename) already exists — reruns that regenerate an
     identical clip must not clobber a note a human may have already
     reviewed/approved.
+
+    `clip_drive_url` is the clip's Google Drive link, if it already resolves
+    (see drive_links.py). A just-rendered clip usually hasn't synced yet, so
+    it's normally None here and backfill_drive_links.py adds it later.
     """
     notes_dir = vault / NOTES_SUBDIR / video_folder_name
     notes_dir.mkdir(parents=True, exist_ok=True)
@@ -104,6 +121,7 @@ def create_clip_note(
         "tags": [TAG, NEEDS_APPROVAL_TAG],
         "status": "clip-created",
         "clip_path": str(clip_path.resolve()),
+        CLIP_DRIVE_FIELD: clip_drive_url,
         "source_video": source_video,
         "analysis_path": str(analysis_path.resolve()) if analysis_path else None,
         "algorithm": algorithm,
@@ -118,6 +136,7 @@ def create_clip_note(
         "caption_text": None,
         "caption_emoji": None,
         "captioned_path": None,
+        CAPTIONED_DRIVE_FIELD: None,
     }
 
     body = (
@@ -126,26 +145,89 @@ def create_clip_note(
         f"**Time:** {clip['start_time']:.2f}s – {clip['end_time']:.2f}s "
         f"({clip['duration']:.2f}s)\n"
         f"**Segment:** {', '.join(clip.get('segment_labels', [])) or 'n/a'}\n\n"
-        f'<video src="file://{clip_path.resolve()}" controls></video>\n'
+        + video_embed(clip_path, clip_drive_url, DRIVE_LINK_FIELDS["clip_path"][1])
     )
 
     write_note(note_path, frontmatter, body)
     return note_path
 
 
-def append_video_embed(path: Path, heading: str, video_path: Path) -> None:
+def video_embed(video_path: Path, drive_url: str | None = None, link_text: str = "Open in Google Drive") -> str:
+    """An inline `file://` video embed, preceded by a Drive link line if known.
+
+    The local embed is kept for inline review in Obsidian on this Mac: a Drive
+    link opens Drive's viewer page rather than playing in the note, and the
+    original clips aren't publicly shared, so no Drive URL can stand in for
+    `<video src>` (TKT-139). The Drive link is what works from other devices.
+    """
+    link = f"[{link_text}]({drive_url})\n\n" if drive_url else ""
+    return f'{link}<video src="file://{Path(video_path).resolve()}" controls></video>\n'
+
+
+_DRIVE_LINK_LINE = r"\[Open [^\]\n]* in Google Drive\]\([^)\n]*\)\n\n"
+
+
+def set_body_drive_link(body: str, local_path: str, drive_url: str, link_text: str) -> str:
+    """Put (or replace) the Drive link line right above the embed of `local_path`.
+
+    Idempotent: a body that already has this link is returned unchanged. A
+    body with no embed for that path is returned unchanged too (the
+    frontmatter field still carries the link).
+    """
+    embed = re.escape(f'<video src="file://{local_path}" controls></video>')
+    pattern = re.compile(rf"(?:{_DRIVE_LINK_LINE})?({embed})")
+    replacement = f"[{link_text}]({drive_url})\n\n"
+    return pattern.sub(lambda m: replacement + m.group(1), body)
+
+
+def set_frontmatter_text_field(note_text: str, key: str, value: str, after_key: str) -> str:
+    """Set a top-level scalar frontmatter field by editing its line in place.
+
+    Used by the backfill so it changes only that one line, rather than
+    re-dumping every note's YAML (which would reformat fields other jobs
+    wrote). Adds the line after `after_key` (or at the end of the
+    frontmatter) if it isn't there. The result is re-parsed and checked to
+    differ from the original only in `key`.
+    """
+    match = FRONTMATTER_RE.match(note_text)
+    if not match:
+        raise ValueError("no frontmatter")
+    fm_text, body = match.group(1), match.group(2)
+    lines = fm_text.split("\n")
+    new_line = f"{key}: {value}"
+    key_re = re.compile(rf"^{re.escape(key)}:(\s|$)")
+    idx = next((i for i, l in enumerate(lines) if key_re.match(l)), None)
+    if idx is not None:
+        lines[idx] = new_line
+    else:
+        after_re = re.compile(rf"^{re.escape(after_key)}:(\s|$)")
+        at = next((i for i, l in enumerate(lines) if after_re.match(l)), None)
+        lines.insert(len(lines) if at is None else at + 1, new_line)
+    new_fm_text = "\n".join(lines)
+
+    before = yaml.safe_load(fm_text) or {}
+    after = yaml.safe_load(new_fm_text) or {}
+    expected = dict(before, **{key: value})
+    if after != expected:
+        raise ValueError(f"editing {key} in place would change other frontmatter fields")
+    return f"---\n{new_fm_text}\n---\n{body}"
+
+
+def append_video_embed(path: Path, heading: str, video_path: Path,
+                       drive_url: str | None = None, link_text: str = "Open in Google Drive") -> None:
     """Append a labeled HTML5 video embed to a note's body.
 
     Used to add the captioned-output preview below the original clip embed
     already in the note (see create_clip_note), so both the source clip and
     the captioned result are reviewable from the same note — same `file://`,
-    no-copy-into-vault convention as the original embed.
+    no-copy-into-vault convention as the original embed. A Drive link line
+    goes above it when `drive_url` is known.
     """
     frontmatter, body = read_note(path)
     body = (
         body.rstrip("\n")
         + f"\n\n## {heading}\n\n"
-        + f'<video src="file://{video_path.resolve()}" controls></video>\n'
+        + video_embed(video_path, drive_url, link_text)
     )
     write_note(path, frontmatter, body)
 
